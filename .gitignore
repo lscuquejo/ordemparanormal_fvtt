@@ -17,5 +17,7 @@ packs/pathFighter
 packs/pathOccultist
 packs/pathSpecialist
 
+media/**
+
 # FORMATS
 *.map

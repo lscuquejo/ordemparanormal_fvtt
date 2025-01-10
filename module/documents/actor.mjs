@@ -118,50 +118,50 @@ export class OrdemActor extends Actor {
 	 * @param {*} system
 	 */
 	_prepareDataStatus(actorData, system) {
-		const VIG = system.attributes.vit.value;
-		const PRE = system.attributes.pre.value;
+		// const VIG = system.attributes.vit.value;
+		// const PRE = system.attributes.pre.value;
 
-		const progress = this.progressCalculation(system);
-		const progressAdjust = progress - 1;
-		const progressIf = progress > 1;
+		// const progress = this.progressCalculation(system);
+		// const progressAdjust = progress - 1;
+		// const progressIf = progress > 1;
 
-		this.perRoundCalculation(system, progress);
+		// this.perRoundCalculation(system, progress);
 
-		switch (system.class) {
-		case 'fighter':
-			system.PV.max = 20 + VIG + (progressIf && progressAdjust * (4 + VIG));
-			system.SAN.max = 12 + (progressIf && progressAdjust * 3);
+		// switch (system.class) {
+		// case 'fighter':
+		// 	system.PV.max = 20 + VIG + (progressIf && progressAdjust * (4 + VIG));
+		// 	system.SAN.max = 12 + (progressIf && progressAdjust * 3);
 
-			if (this.usingWithoutSanityRule) system.PD.max = 6 + PRE + (progressIf && progressAdjust * (3 + PRE));
-			else system.PE.max = 2 + PRE + (progressIf && progressAdjust * (2 + PRE));
-			break;
-		case 'specialist':
-			system.PV.max = 16 + VIG + (progressIf && progressAdjust * (3 + VIG));
-			system.SAN.max = 16 + (progressIf && progressAdjust * 4);
+		// 	if (this.usingWithoutSanityRule) system.PD.max = 6 + PRE + (progressIf && progressAdjust * (3 + PRE));
+		// 	else system.PE.max = 2 + PRE + (progressIf && progressAdjust * (2 + PRE));
+		// 	break;
+		// case 'specialist':
+		// 	system.PV.max = 16 + VIG + (progressIf && progressAdjust * (3 + VIG));
+		// 	system.SAN.max = 16 + (progressIf && progressAdjust * 4);
 
-			if (this.usingWithoutSanityRule) system.PD.max = 8 + PRE + (progressIf && progressAdjust * (4 + PRE));
-			else system.PE.max = 3 + PRE + (progressIf && progressAdjust * (3 + PRE));
-			break;
-		case 'occultist':
-			system.PV.max = 12 + VIG + (progressIf && progressAdjust * (2 + VIG));
-			system.SAN.max = 20 + (progressIf && progressAdjust * 5);
+		// 	if (this.usingWithoutSanityRule) system.PD.max = 8 + PRE + (progressIf && progressAdjust * (4 + PRE));
+		// 	else system.PE.max = 3 + PRE + (progressIf && progressAdjust * (3 + PRE));
+		// 	break;
+		// case 'occultist':
+		// 	system.PV.max = 12 + VIG + (progressIf && progressAdjust * (2 + VIG));
+		// 	system.SAN.max = 20 + (progressIf && progressAdjust * 5);
 
-			if (this.usingWithoutSanityRule) system.PD.max = 10 + PRE + (progressIf && progressAdjust * (5 + PRE));
-			else system.PE.max = 4 + PRE + (progressIf && progressAdjust * (4 + PRE));
-			break;
-		case 'survivor':
-			system.PV.max = 8 + VIG + (progressIf && progressAdjust * 2);
-			system.SAN.max = 8 + (progressIf && progressAdjust * 2);
+		// 	if (this.usingWithoutSanityRule) system.PD.max = 10 + PRE + (progressIf && progressAdjust * (5 + PRE));
+		// 	else system.PE.max = 4 + PRE + (progressIf && progressAdjust * (4 + PRE));
+		// 	break;
+		// case 'survivor':
+		// 	system.PV.max = 8 + VIG + (progressIf && progressAdjust * 2);
+		// 	system.SAN.max = 8 + (progressIf && progressAdjust * 2);
 
-			if (this.usingWithoutSanityRule) system.PD.max = 4 + PRE + (progressIf && progressAdjust * (2));
-			else system.PE.max = 2 + PRE + (progressIf && progressAdjust * 1);
-			break;
-		default:
-			system.PV.max = system.PV.max || 0;
-			system.PE.max = system.PE.max || 0;
-			system.SAN.max = system.SAN.max || 0;
-			break;
-		}
+		// 	if (this.usingWithoutSanityRule) system.PD.max = 4 + PRE + (progressIf && progressAdjust * (2));
+		// 	else system.PE.max = 2 + PRE + (progressIf && progressAdjust * 1);
+		// 	break;
+		// default:
+		// 	system.PV.max = system.PV.max || 0;
+		// 	system.PE.max = system.PE.max || 0;
+		// 	system.SAN.max = system.SAN.max || 0;
+		// 	break;
+		// }
 	}
 
 	/**
