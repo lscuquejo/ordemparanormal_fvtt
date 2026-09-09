@@ -5,6 +5,9 @@
 		<div class="ritual-box" style="flex-direction: row; align-items: center; gap: 10px;">
 			<span class="label"><i class="fas fa-book-skull"></i> {{localize "op.ritualdt"}}</span>
 			<span class="badge-ritual"> {{system.ritual.DT}} </span>
+			{{#if ritualDtZoneBonus}}
+				<span class="ritual-dt-zone-bonus" title="{{localize 'op.cinerariaZoneDtHint'}}">(+{{ritualDtZoneBonus}})</span>
+			{{/if}}
 		</div>
 	</header>
 
@@ -64,7 +67,8 @@
 								<div class="item-identity flexrow">
 									<div class="item-image slide">
 										<img src="{{item.img}}" title="{{item.name}}" class="item-toggle" style="cursor: pointer;" />
-										<a class="rollable" data-roll-type="item" data-action="onRoll"><i class="fa-solid fa-dice-d20"></i></a>
+										<a class="rollable ritual-cast" data-action="ritualCast" title="{{localize 'op.ritualCast'}}"><i class="fa-solid fa-hand-sparkles"></i></a>
+										<a class="rollable" data-roll-type="item" data-action="onRoll" title="{{localize 'op.ritualRoll'}}"><i class="fa-solid fa-dice-d20"></i></a>
 									</div>
 									<span class="item-name item-toggle" style="cursor: pointer;" data-tooltip="{{item.name}}">{{item.name}}</span>
 								</div>
@@ -78,7 +82,9 @@
 
 								<div class="item-meta-col col-target">
 									<span class="badge-cat">
-										{{#if item.system.target}}
+										{{#if item.sheetTargetLabel}}
+											{{item.sheetTargetLabel}}
+										{{else if item.system.target}}
 											{{item.system.targetQtd}}
 											<span class="lowercase">{{localize (concat "op.targetChoices." item.system.target)}}</span>
 										{{else}}—{{/if}}
@@ -149,7 +155,8 @@
 								<div class="item-identity flexrow">
 									<div class="item-image slide">
 										<img src="{{item.img}}" title="{{item.name}}" class="item-toggle" style="cursor: pointer;" />
-										<a class="rollable" data-roll-type="item" data-action="onRoll"><i class="fa-solid fa-dice-d20"></i></a>
+										<a class="rollable ritual-cast" data-action="ritualCast" title="{{localize 'op.ritualCast'}}"><i class="fa-solid fa-hand-sparkles"></i></a>
+										<a class="rollable" data-roll-type="item" data-action="onRoll" title="{{localize 'op.ritualRoll'}}"><i class="fa-solid fa-dice-d20"></i></a>
 									</div>
 									<span class="item-name item-toggle" style="cursor: pointer;" data-tooltip="{{item.name}}">{{item.name}}</span>
 								</div>

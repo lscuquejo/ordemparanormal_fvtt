@@ -20,5 +20,19 @@
 			</div>
 		</div>
 
+		<div class="class-attributes-section op-shadow" style="margin-top: 12px;">
+			<div class="section-title">{{localize "op.weaponModSection"}}</div>
+			<div class="grid" style="grid-template-columns: 120px 1fr; gap: 10px; align-items: center;">
+				<label class="resource-label">{{localize "op.modifiesWeapons"}}</label>
+				<input type="checkbox" name="system.modifiesWeapons" {{checked system.modifiesWeapons}} />
+
+				<label class="resource-label">{{localize "op.attackBonus"}}</label>
+				<input type="number" name="system.weaponMod.attackBonus" value="{{system.weaponMod.attackBonus}}" />
+
+				<label class="resource-label">{{localize "op.damageBonusFormula"}}</label>
+				<input type="text" name="system.weaponMod.damageBonus" value="{{system.weaponMod.damageBonus}}" placeholder="1d6" />
+			</div>
+		</div>
+
 	</div>
 </section>

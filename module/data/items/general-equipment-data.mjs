@@ -12,6 +12,11 @@ export class GeneralEquipmentData extends foundry.abstract.TypeDataModel {
 			}),
 			type: new fields.StringField({ initial: "" }),
 			quantity: new fields.NumberField({ required: true, integer: true, initial: 1 }),
+			modifiesWeapons: new fields.BooleanField({ initial: false }),
+			weaponMod: new fields.SchemaField({
+				attackBonus: new fields.NumberField({ integer: true, initial: 0 }),
+				damageBonus: new fields.StringField({ initial: "" }),
+			}),
 		};
 	}
 

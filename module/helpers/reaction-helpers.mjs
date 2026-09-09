@@ -12,6 +12,11 @@
 
 const TRAINED_THRESHOLD = 5;
 
+/** @param {{ value?: number, bonus?: number }|null|undefined} attribute */
+function effectiveAttribute(attribute) {
+	return (Number(attribute?.value) || 0) + (Number(attribute?.bonus) || 0);
+}
+
 /**
  * @param {object} item   Item document (or plain object with system.types.rangeType.name and system.formulas.attack.skill)
  * @returns {boolean}     True when the attack is melee.
@@ -51,7 +56,7 @@ export function getSkillBonus(actor, skillKey) {
 	const skill = actor?.system?.skills?.[skillKey];
 	if (!skill) return 0;
 	const attrKey = SKILL_TO_ATTRIBUTE[skillKey];
-	const attrValue = attrKey ? actor?.system?.attributes?.[attrKey]?.value ?? 0 : 0;
+	const attrValue = attrKey ? effectiveAttribute(actor?.system?.attributes?.[attrKey]) : 0;
 	const degree = skill.degree?.value ?? 0;
 	const mod = skill.mod ?? 0;
 	const value = skill.value ?? 0;

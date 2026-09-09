@@ -27,7 +27,7 @@
 section.itemsheet,
 form.ordemparanormal.actor {
 	overflow: hidden;
-	color: colors.$dark-gray;
+	color: colors.$op-text;
 
 	.scrollable {
 		box-sizing: border-box;
@@ -149,6 +149,59 @@ form.ordemparanormal.actor {
 
 		.modifier {
 			max-width: 30px;
+		}
+
+		.dice-mod-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 1px;
+
+			.dice-mod-btn {
+				width: 16px;
+				height: 16px;
+				min-width: unset;
+				padding: 0;
+				font-size: 13px;
+				line-height: 1;
+				border: 1px solid #aaa;
+				border-radius: 3px;
+				background: rgba(0, 0, 0, 0.05);
+				cursor: pointer;
+				color: #444;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				&:hover {
+					background: rgba(139, 0, 0, 0.15);
+					border-color: #8b0000;
+					color: #8b0000;
+				}
+			}
+
+			.dice-mod-value {
+				min-width: 28px;
+				text-align: center;
+				font-size: 11px;
+				font-weight: bold;
+				color: #555;
+				display: flex;
+				align-items: center;
+				gap: 1px;
+
+				.dice-mod-icon {
+					font-size: 10px;
+					opacity: 0.7;
+				}
+
+				&.positive {
+					color: #2a6e2a;
+				}
+
+				&.negative {
+					color: #8b0000;
+				}
+			}
 		}
 
 		.rollFreeSkill {
@@ -376,8 +429,8 @@ form.ordemparanormal.actor {
 
 						input {
 							font-size: 28px;
-							font-family: typography.$font-primary;
-							font-weight: bold;
+							font-family: typography.$op-font-title;
+							font-weight: 700;
 							width: 100%;
 							border: none;
 							border-radius: 4px;
@@ -386,7 +439,101 @@ form.ordemparanormal.actor {
 							height: 100%;
 							line-height: 36px;
 							min-width: unset;
+							color: #ffffff;
+							letter-spacing: 0.04em;
+							text-shadow:
+								0 0 16px colors.$op-glow-red,
+								0 2px 4px rgba(0, 0, 0, 0.8);
 						}
+					}
+
+					.age-box {
+						flex: 0 0 72px;
+						margin: 0 0 4px;
+						padding: 2px 6px 4px;
+						background: colors.$op-bg-card;
+						border: 1px solid colors.$op-border;
+						border-radius: 6px;
+
+						.resource-label {
+							display: block;
+							margin: 0;
+							color: #e8e8e8;
+							font-size: 9px;
+							font-weight: 700;
+							text-transform: uppercase;
+							letter-spacing: 0.08em;
+						}
+
+						.resource-content input {
+							width: 100%;
+							height: 28px;
+							padding: 0;
+							border: none;
+							background: transparent;
+							color: #ffffff;
+							font-size: 20px;
+							font-weight: 700;
+							text-align: center;
+						}
+					}
+
+					.unlock-fields-btn {
+						flex: 0 0 auto;
+						display: inline-flex;
+						align-items: center;
+						gap: 6px;
+						height: 28px;
+						padding: 0 10px;
+						margin: 0 0 4px;
+						border: 1px solid colors.$op-border;
+						border-radius: 4px;
+						background: rgba(139, 0, 0, 0.15);
+						color: colors.$op-text;
+						font-family: typography.$op-font-body;
+						font-size: 11px;
+						font-weight: 700;
+						text-transform: uppercase;
+						letter-spacing: 0.04em;
+						cursor: pointer;
+						white-space: nowrap;
+
+						i {
+							color: colors.$op-bright-red;
+						}
+
+						&:hover {
+							background: rgba(185, 28, 28, 0.28);
+							border-color: colors.$op-crimson;
+							color: #ffffff;
+						}
+
+						&.is-active {
+							background: rgba(22, 163, 74, 0.18);
+							border-color: rgba(22, 163, 74, 0.5);
+							color: #86efac;
+
+							i {
+								color: #86efac;
+							}
+						}
+
+						&.restore-auto-btn.is-active {
+							background: rgba(124, 58, 237, 0.18);
+							border-color: rgba(124, 58, 237, 0.5);
+							color: #c4b5fd;
+
+							i {
+								color: #c4b5fd;
+							}
+						}
+					}
+
+					.sheet-mode-buttons {
+						display: flex;
+						flex: 0 0 auto;
+						gap: 4px;
+						align-items: flex-end;
 					}
 
 					.progress-group {
@@ -402,6 +549,42 @@ form.ordemparanormal.actor {
 							.resource-label {
 								font-size: 11px;
 								margin-bottom: 2px;
+							}
+
+							.level-up-control {
+								display: flex;
+								align-items: center;
+								gap: 0.35rem;
+
+								.progress-value {
+									font-size: 14px;
+									font-weight: 700;
+									min-width: 2.5rem;
+									text-align: center;
+								}
+
+								.level-up-btn {
+									display: inline-flex;
+									align-items: center;
+									gap: 0.25rem;
+									font-size: 11px;
+									padding: 0.15rem 0.45rem;
+									border-radius: 4px;
+									border: 1px solid rgba(255, 255, 255, 0.12);
+									background: rgba(46, 125, 50, 0.2);
+									color: inherit;
+									cursor: pointer;
+									white-space: nowrap;
+
+									&:hover:not(:disabled) {
+										background: rgba(46, 125, 50, 0.35);
+									}
+
+									&:disabled {
+										opacity: 0.45;
+										cursor: not-allowed;
+									}
+								}
 							}
 						}
 					}
@@ -535,6 +718,10 @@ form.ordemparanormal.actor {
 							font-size: 11px;
 							padding: 3px;
 							display: block;
+
+							&.condition-affected {
+								color: #b92a4c;
+							}
 						}
 
 						.resource-content {
@@ -571,6 +758,10 @@ form.ordemparanormal.actor {
 
 				.resource-label {
 					font-size: 12px;
+
+					&.condition-affected {
+						color: #b92a4c;
+					}
 				}
 
 				.resource-content {
@@ -581,7 +772,7 @@ form.ordemparanormal.actor {
 	}
 }
 
-/* --- NAVEGAÇÃO DE TABS (ESTILO MINIMALISTA) --- */
+/* --- NAVEGAÇÃO DE TABS (DARK OP STYLE) --- */
 form.ordemparanormal.actor nav.sheet-tabs.tabs,
 form.ordemparanormal.item nav.sheet-tabs.tabs {
 	display: inline-flex;
@@ -589,45 +780,500 @@ form.ordemparanormal.item nav.sheet-tabs.tabs {
 	align-items: center;
 	padding: 0 16px;
 	border: none;
+	border-bottom: 1px solid colors.$op-border;
+	background: colors.$op-bg;
 
 	a {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 8px;
-		padding: 0 16px;
+		padding: 0 14px;
 		height: 100%;
-
 		font-family: typography.$font-primary;
 		font-weight: 500;
-		font-size: 14px;
-		color: colors.$light-taupe;
+		font-size: 13px;
+		color: colors.$op-text-muted;
 		text-decoration: none;
 		position: relative;
 		transition: all 0.2s ease;
+		border-bottom: 2px solid transparent;
+		margin-bottom: -1px;
 
 		i {
-			font-size: 13px;
-			color: #777;
+			font-size: 12px;
 			transition: color 0.2s ease;
 		}
 
 		&:hover {
-			color: #000;
-			text-shadow: none;
-
+			color: colors.$op-text;
+			text-shadow: 0 0 8px colors.$op-glow-red;
 			i {
-				color: colors.$light-taupe;
+				color: colors.$op-bright-red;
 			}
 		}
 
 		&.active {
-			color: colors.$medium-gray;
-			font-weight: 600;
-			text-shadow: none;
-
+			color: colors.$op-bright-red;
+			font-weight: 700;
+			border-bottom-color: colors.$op-crimson;
+			text-shadow: 0 0 10px colors.$op-glow-red;
 			i {
-				color: colors.$gray;
+				color: colors.$op-bright-red;
+			}
+		}
+	}
+}
+
+/* ============================================================ */
+/* ORDEM PARANORMAL — DARK THEME GLOBAL                         */
+/* ============================================================ */
+form.ordemparanormal.actor {
+	font-family: typography.$op-font-body;
+	--color-text-primary: #{colors.$op-text};
+	--color-text-secondary: #{colors.$op-text-muted};
+	--color-text-emphatic: #ffffff;
+	--input-text-color: #ffffff;
+
+	input,
+	select,
+	textarea {
+		color: colors.$op-text;
+		font-family: typography.$op-font-body;
+	}
+
+	/* Background geral da ficha */
+	section.window-content {
+		background: colors.$op-bg !important;
+		color: colors.$op-text;
+		font-family: typography.$op-font-body;
+	}
+
+	/* Header geral */
+	header.sheet-header-op {
+		background: colors.$op-bg;
+		border-bottom: 1px solid colors.$op-border;
+
+		/* Nome do personagem */
+		.header-identify h1.charname input {
+			color: #ffffff !important;
+			-webkit-text-fill-color: #ffffff !important;
+			font-family: typography.$op-font-title !important;
+			font-weight: 700 !important;
+			font-size: 28px !important;
+			letter-spacing: 0.04em;
+			text-shadow:
+				0 0 16px colors.$op-glow-red,
+				0 2px 4px rgba(0, 0, 0, 0.8);
+			border-bottom: 1px solid colors.$op-border !important;
+			background: transparent !important;
+			caret-color: #ffffff;
+		}
+
+		.header-identify .age-box {
+			background: colors.$op-bg-card !important;
+			border-color: colors.$op-border !important;
+
+			.resource-label {
+				color: #e8e8e8 !important;
+				background: transparent !important;
+				border: none !important;
+			}
+
+			.resource-content input {
+				color: #ffffff !important;
+				-webkit-text-fill-color: #ffffff !important;
+				background: transparent !important;
+				border: none !important;
+				text-align: center;
+				caret-color: #ffffff;
+				font-size: 22px !important;
+				font-weight: 900 !important;
+				text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+			}
+		}
+
+		.rituals-tab {
+			.inventory-ritual-header .ritual-box {
+				.label {
+					color: #f2f2f2 !important;
+				}
+
+				.badge-ritual {
+					color: #ffffff !important;
+					border-color: rgba(255, 255, 255, 0.18) !important;
+					background: rgba(255, 255, 255, 0.08) !important;
+				}
+			}
+
+			.item-name,
+			.item-name.item-toggle {
+				color: #f5f5f5 !important;
+			}
+
+			.item-name:hover,
+			.item-name.item-toggle:hover {
+				color: #ffffff !important;
+			}
+
+			.item-meta-col,
+			.badge-cat {
+				color: #e8e8e8 !important;
+			}
+		}
+
+		/* Pills de classe/origem/trilha */
+		.agent-details.resources {
+			.interactive-pill {
+				background: rgba(139, 0, 0, 0.1) !important;
+				border-color: colors.$op-border !important;
+				color: colors.$op-text !important;
+
+				&:hover {
+					background: rgba(139, 0, 0, 0.22) !important;
+					border-color: colors.$op-crimson !important;
+				}
+			}
+
+			.empty-slot {
+				border-color: rgba(139, 0, 0, 0.25) !important;
+				color: colors.$op-text-muted !important;
+				&:hover {
+					border-color: colors.$op-crimson !important;
+				}
+			}
+
+			.item-name-text {
+				color: colors.$op-text !important;
+			}
+		}
+
+		/* -------- BARRAS DE STATUS (PV / SAN / PE / PD) -------- */
+		.resources-main {
+			.resource {
+				background: colors.$op-bg-card !important;
+				border-color: colors.$op-border !important;
+				border-radius: 6px;
+				position: relative;
+				overflow: hidden;
+
+				/* brilho superior ritual */
+				&::before {
+					content: "";
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					height: 1px;
+					background: linear-gradient(90deg, transparent, colors.$op-crimson, transparent);
+					opacity: 0.6;
+				}
+
+				.resource-label {
+					background: rgba(139, 0, 0, 0.18) !important;
+					color: colors.$op-bright-red !important;
+					border-bottom-color: colors.$op-border !important;
+					text-transform: uppercase;
+					letter-spacing: 0.05em;
+					font-size: 10px !important;
+					font-weight: 700;
+				}
+
+				.resource-content {
+					input {
+						color: colors.$op-text !important;
+					}
+					span {
+						color: #e8e8e8 !important;
+					}
+					.condition-penalty {
+						color: #ffd6dc !important;
+						font-weight: 800;
+					}
+				}
+			}
+		}
+
+		/* -------- ATRIBUTOS — ESTILO RITUAL/RUNA -------- */
+		.header-bottom {
+			background: rgba(10, 10, 10, 0.6) !important;
+			border-color: colors.$op-border !important;
+			border-radius: 8px;
+
+			/* linha decorativa topo */
+			&::before {
+				content: "";
+				display: block;
+				height: 1px;
+				background: linear-gradient(
+					90deg,
+					transparent,
+					colors.$op-blood,
+					colors.$op-crimson,
+					colors.$op-blood,
+					transparent
+				);
+				margin-bottom: 4px;
+				opacity: 0.7;
+			}
+
+			.active-conditions {
+				background: rgba(185, 42, 76, 0.18);
+				border-color: rgba(255, 92, 112, 0.4);
+				color: #f5f5f5 !important;
+
+				.active-conditions-label,
+				.active-condition-name {
+					color: #ffd6dc !important;
+				}
+
+				.active-condition,
+				.active-condition-desc {
+					color: #f5f5f5 !important;
+					opacity: 1;
+				}
+
+				.active-condition-reduced {
+					color: #ffffff !important;
+					font-weight: 700;
+				}
+			}
+
+			.resources {
+				.resource {
+					position: relative;
+					background: colors.$op-bg-card;
+					border: 1px solid colors.$op-border;
+					border-radius: 6px;
+					padding: 4px 6px;
+					transition: all 0.2s ease;
+
+					/* brilho runa no hover */
+					&:hover {
+						border-color: colors.$op-crimson;
+						box-shadow:
+							0 0 10px colors.$op-glow-red,
+							inset 0 0 8px rgba(139, 0, 0, 0.1);
+					}
+
+					/* canto decorativo ⌐ ¬ */
+					&::before {
+						content: "";
+						position: absolute;
+						top: 2px;
+						left: 2px;
+						width: 6px;
+						height: 6px;
+						border-top: 1px solid colors.$op-blood;
+						border-left: 1px solid colors.$op-blood;
+						opacity: 0.8;
+					}
+					&::after {
+						content: "";
+						position: absolute;
+						bottom: 2px;
+						right: 2px;
+						width: 6px;
+						height: 6px;
+						border-bottom: 1px solid colors.$op-blood;
+						border-right: 1px solid colors.$op-blood;
+						opacity: 0.8;
+					}
+
+					.resource-label {
+						color: #e8e8e8 !important;
+						font-size: 10px !important;
+						text-transform: uppercase;
+						letter-spacing: 0.08em;
+						font-weight: 600;
+
+						/* rollable attrs ficam vermelhos */
+						&.rollable {
+							color: #ffb4b4 !important;
+							cursor: pointer;
+							&:hover {
+								color: #fff !important;
+								text-shadow: 0 0 8px colors.$op-glow-red;
+							}
+						}
+
+						&.condition-affected {
+							color: #ffd6dc !important;
+						}
+					}
+
+					&.condition-affected {
+						border-color: #b92a4c !important;
+						box-shadow: 0 0 8px rgba(185, 42, 76, 0.35);
+					}
+
+					.resource-content input {
+						color: #ffffff !important;
+						font-size: 20px !important;
+						font-weight: 700;
+						text-shadow: 0 0 8px colors.$op-glow-red;
+					}
+
+					.resource-content span,
+					.resource-content .condition-penalty {
+						color: #f5f5f5 !important;
+					}
+
+					.resource-content .attr-ritual-bonus {
+						margin-left: 0.25rem;
+						font-weight: 700;
+						color: #9fd89f !important;
+					}
+
+					.resource-content .condition-penalty {
+						color: #ffd6dc !important;
+						font-weight: 800;
+					}
+				}
+			}
+		}
+	}
+}
+
+/* ============================================================ */
+/* PERÍCIAS — CORES POR GRAU DE TREINAMENTO                     */
+/* ============================================================ */
+.skills-content {
+	/* fundo da seção */
+	background: transparent;
+
+	/* linha base das perícias */
+	.skill {
+		border-radius: 4px;
+		transition:
+			background 0.15s ease,
+			border-color 0.15s ease;
+		border: 1px solid transparent;
+		margin-bottom: 1px;
+
+		/* nome da perícia rollable */
+		.skill-name.rollable {
+			color: colors.$op-text !important;
+			&:hover {
+				color: colors.$op-bright-red !important;
+				text-shadow: 0 0 6px colors.$op-glow-red;
+			}
+		}
+
+		/* selects de treino */
+		select {
+			background: transparent;
+			color: colors.$op-text-muted;
+		}
+
+		/* inputs de mod/total */
+		input[readonly] {
+			color: colors.$op-text-muted !important;
+		}
+		.modifier {
+			color: colors.$op-text !important;
+		}
+
+		/* hover geral */
+		&:hover {
+			background: rgba(139, 0, 0, 0.06);
+			border-color: rgba(139, 0, 0, 0.2);
+		}
+
+		/* ---- TREINADO (+5) — VERDE ---- */
+		&.degree-trained {
+			background: colors.$op-trained-bg;
+			border-color: colors.$op-trained-border;
+
+			.skill-name {
+				color: colors.$op-trained !important;
+				font-weight: 600;
+			}
+			select {
+				color: colors.$op-trained !important;
+			}
+
+			&:hover {
+				background: rgba(22, 163, 74, 0.18);
+			}
+		}
+
+		/* ---- VETERANO (+10) — AZUL ---- */
+		&.degree-veteran {
+			background: colors.$op-veteran-bg;
+			border-color: colors.$op-veteran-border;
+
+			.skill-name {
+				color: colors.$op-veteran !important;
+				font-weight: 600;
+			}
+			select {
+				color: colors.$op-veteran !important;
+			}
+
+			&:hover {
+				background: rgba(37, 99, 235, 0.18);
+			}
+		}
+
+		/* ---- EXPERT (+15) — LARANJA ---- */
+		&.degree-expert {
+			background: colors.$op-expert-bg;
+			border-color: colors.$op-expert-border;
+
+			.skill-name {
+				color: colors.$op-expert !important;
+				font-weight: 700;
+			}
+			select {
+				color: colors.$op-expert !important;
+			}
+
+			&:hover {
+				background: rgba(234, 88, 12, 0.18);
+			}
+		}
+
+		/* ---- MESTRE (+20) — ÂMBAR ---- */
+		&.degree-master,
+		&.degree-alfa,
+		&.degree-gama,
+		&.degree-delta {
+			background: colors.$op-master-bg;
+			border-color: colors.$op-master-border;
+
+			.skill-name {
+				color: colors.$op-master !important;
+				font-weight: 700;
+				text-shadow: 0 0 6px colors.$op-glow-gold;
+			}
+			select {
+				color: colors.$op-master !important;
+			}
+			&:hover {
+				background: rgba(217, 119, 6, 0.18);
+			}
+		}
+
+		/* botões ± dados */
+		.dice-mod-btn {
+			border-color: rgba(139, 0, 0, 0.4) !important;
+			background: rgba(139, 0, 0, 0.08) !important;
+			color: colors.$op-text-muted !important;
+			&:hover {
+				background: rgba(185, 28, 28, 0.25) !important;
+				border-color: colors.$op-crimson !important;
+				color: colors.$op-bright-red !important;
+			}
+		}
+
+		&.condition-affected {
+			border-color: rgba(185, 42, 76, 0.45);
+
+			.skill-name,
+			.skill-name.rollable,
+			.resource-label {
+				color: #b92a4c !important;
 			}
 		}
 	}

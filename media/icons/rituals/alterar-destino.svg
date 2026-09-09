@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-alterar-destino">
+<stop offset="0%" stop-color="#00ff99" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+<filter id="glow-alterar-destino"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-alterar-destino)"/>
+<circle cx="278" cy="195" r="10" fill="#00ffff" opacity="0.55"/><circle cx="321" cy="289" r="14" fill="#ff00ff" opacity="0.55"/><circle cx="219" cy="311" r="8" fill="#ffff00" opacity="0.55"/><circle cx="208" cy="215" r="11" fill="#00ff00" opacity="0.55"/>
+<g transform="translate(0,0)" opacity="1" filter="url(#glow-alterar-destino)">
+<path d="M256 120 L320 200 L280 200 L340 320 L220 240 L260 240 L200 120 Z" fill="#00ffff"/>
+		 <circle cx="180" cy="360" r="28" fill="none" stroke="#00ffff" stroke-width="14"/>
+		 <circle cx="332" cy="360" r="28" fill="none" stroke="#00ffff" stroke-width="14"/>
+</g>
+</svg>

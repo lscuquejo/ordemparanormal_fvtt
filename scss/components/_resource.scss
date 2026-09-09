@@ -3,3 +3,117 @@
 .resource-label {
 	font-weight: bold;
 }
+
+.resource-temp {
+	font-size: var(--font-size-12);
+	font-weight: 700;
+	color: colors.$c-success;
+	white-space: nowrap;
+	margin-left: 0.15rem;
+}
+
+.combat-derived-stats {
+	.resource-content {
+		gap: 0.35rem;
+		align-items: center;
+	}
+
+	.derived-stat-badge {
+		font-size: var(--font-size-12);
+		font-weight: 700;
+		color: colors.$c-success;
+		white-space: nowrap;
+	}
+}
+
+.active-rd-summary {
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	margin-top: 0.25rem;
+	padding: 0.25rem 0.15rem 0;
+
+	.active-rd-label {
+		font-size: var(--font-size-11);
+		font-weight: 700;
+		text-transform: uppercase;
+		opacity: 0.75;
+		margin-right: 0.15rem;
+	}
+
+	.rd-type-badge {
+		font-size: var(--font-size-11);
+		font-weight: 600;
+		padding: 0.1rem 0.4rem;
+		border-radius: 3px;
+		background: rgba(0, 0, 0, 0.15);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		white-space: nowrap;
+	}
+}
+
+$condition-red: #b92a4c;
+
+.resource.condition-affected,
+.skill.condition-affected,
+.skill-box.condition-affected {
+	border-color: rgba(185, 42, 76, 0.45);
+}
+
+.resource-label.condition-affected,
+.skill-name.condition-affected,
+.skill-label.condition-affected,
+.badge-cat.condition-affected {
+	color: $condition-red !important;
+}
+
+.condition-penalty {
+	display: inline-block;
+	margin-left: 0.2rem;
+	color: $condition-red !important;
+	font-size: 0.7rem;
+	font-weight: 800;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.active-conditions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	margin-top: 0.4rem;
+	padding: 0.4rem 0.45rem;
+	border: 1px solid rgba(185, 42, 76, 0.35);
+	border-radius: 4px;
+	background: rgba(185, 42, 76, 0.08);
+	color: #f5f5f5;
+
+	.active-conditions-label {
+		font-size: 0.65rem;
+		font-weight: 800;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: #ffd6dc;
+	}
+
+	.active-condition {
+		font-size: 0.75rem;
+		line-height: 1.25;
+		color: #f5f5f5;
+	}
+
+	.active-condition-name {
+		color: #ffd6dc;
+		font-weight: 800;
+	}
+
+	.active-condition-desc {
+		color: #f5f5f5;
+		opacity: 1;
+	}
+
+	.active-condition-reduced {
+		color: #ffffff;
+		font-weight: 700;
+	}
+}

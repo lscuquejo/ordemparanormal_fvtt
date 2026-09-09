@@ -1,0 +1,87 @@
+<section class="tab inventory-tab attacks-tab {{tab.cssClass}}" data-tab="attacks" data-group="primary">
+	<div class="inventory-list-container scrollable-inventory">
+		<div class="inventory-category op-shadow">
+			<div class="inventory-list-header">
+				<span class="col-name">
+					<i class="fa-solid fa-crosshairs"></i>
+					{{localize "op.attackProfiles"}}
+				</span>
+				<span class="col-prop" style="width: 110px;">{{localize "op.baseWeapon"}}</span>
+				<span class="col-prop" style="width: 100px;">{{localize "op.test"}}</span>
+				<span class="col-prop" style="width: 130px;">{{localize "op.damage"}}</span>
+				<span class="col-prop" style="width: 60px;">{{localize "op.cost"}}</span>
+				<span class="col-controls">
+					{{#if editable}}
+						<a class="item-control" data-action="createAttackProfile" title="{{localize 'op.addAttackProfile'}}">
+							<i class="fas fa-plus"></i>
+						</a>
+					{{/if}}
+				</span>
+			</div>
+
+			<ol class="inventory-items-list">
+				{{#each attackProfiles as |profile|}}
+					<li class="item item-row" data-profile-id="{{profile.id}}">
+						<div class="item-row-main">
+							<div class="item-identity flexrow">
+								<div class="item-image slide">
+									<img src="{{profile.img}}" title="{{profile.name}}" width="24" height="24" />
+									{{#if profile.hasBase}}
+										<a class="rollable" data-action="rollAttackProfile" title="{{localize 'op.rollAttackProfile'}}">
+											<i class="fa-solid fa-dice-d20"></i>
+										</a>
+									{{/if}}
+								</div>
+								<span class="item-name" data-tooltip="{{profile.notes}}">{{profile.name}}</span>
+							</div>
+
+							<div class="item-meta-col col-prop" style="width: 110px;">
+								<span class="badge-cat">{{profile.baseItemName}}</span>
+							</div>
+							<div class="item-meta-col col-prop {{#if @root.conditionDisplay.attacks.affected}}condition-affected{{/if}}" style="width: 100px;">
+								<span class="badge-cat {{#if @root.conditionDisplay.attacks.affected}}condition-affected{{/if}}">{{profile.attackLabel}}</span>
+								{{opConditionPenalty @root.conditionDisplay "attacks"}}
+							</div>
+							<div class="item-meta-col col-prop" style="width: 130px;">
+								<span class="badge-cat highlight">{{profile.damageLabel}}</span>
+							</div>
+							<div class="item-meta-col col-prop" style="width: 60px;">
+								<span class="badge-cat">{{profile.peLabel}}</span>
+							</div>
+
+							<div class="item-meta-col col-controls">
+								{{#if @root.editable}}
+									<a class="item-btn item-edit" data-action="editAttackProfile" title="{{localize 'op.editAttackProfile'}}">
+										<i class="fas fa-edit"></i>
+									</a>
+									<a class="item-btn btn-delete" data-action="deleteAttackProfile" title="{{localize 'op.deleteAttackProfile'}}">
+										<i class="fas fa-trash"></i>
+									</a>
+								{{/if}}
+							</div>
+						</div>
+					</li>
+				{{else}}
+					<li class="item item-row">
+						<div class="item-row-main" style="justify-content: center; color: #777;">
+							{{localize "op.noAttacks"}}
+						</div>
+					</li>
+				{{/each}}
+			</ol>
+		</div>
+
+		{{#if activeWeaponMods.length}}
+			<div class="inventory-category op-shadow" style="margin-top: 12px;">
+				<div class="inventory-list-header">
+					<span class="col-name"><i class="fa-solid fa-bolt"></i> {{localize "op.activeWeaponMods"}}</span>
+				</div>
+				<ul class="inventory-items-list" style="padding: 8px 12px;">
+					{{#each activeWeaponMods as |mod|}}
+						<li><span class="badge-cat">{{mod.name}} — {{mod.summary}}</span></li>
+					{{/each}}
+				</ul>
+			</div>
+		{{/if}}
+	</div>
+</section>

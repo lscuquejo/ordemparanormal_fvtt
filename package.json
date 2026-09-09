@@ -7,6 +7,7 @@
 		"commit": "git-cz",
 		"sass": "npx sass --watch scss/ordemparanormal.scss css/ordemparanormal.css",
 		"build:css": "npx sass --no-source-map scss/ordemparanormal.scss css/ordemparanormal.css && npx prettier --write css/ordemparanormal.css",
+		"build:ritual-icons": "node ./scripts/generate-ritual-icons.mjs",
 		"build:db": "node ./utils/packs.mjs package pack",
 		"build:json": "node ./utils/packs.mjs package unpack",
 		"lint": "eslint --ext .mjs,.js,.cjs .",
@@ -70,7 +71,7 @@
 			"eslint --fix",
 			"prettier --write"
 		],
-		"*.{html,css,scss,hbs,json}": [
+		"*.{html,css,scss,json}": [
 			"prettier --write"
 		]
 	}

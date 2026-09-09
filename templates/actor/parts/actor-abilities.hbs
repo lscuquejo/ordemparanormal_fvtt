@@ -145,6 +145,13 @@
 									<div class="item-image slide">
 										<img src="{{item.img}}" title="{{item.name}}" class="item-toggle" style="cursor: pointer;" />
 										<a class="rollable" data-roll-type="item" data-action="onRoll"><i class="fa-solid fa-dice-d20"></i></a>
+										{{#if item.modifiesWeapons}}
+											<a
+												class="item-toggle-mod {{ternary item.weaponModActive 'is-active' ''}}"
+												data-action="toggleWeaponMod"
+												title="{{localize 'op.toggleWeaponMod'}}: {{item.weaponModSummary}}"
+											><i class="{{ternary item.weaponModActive 'fas' 'far'}} fa-bolt"></i></a>
+										{{/if}}
 									</div>
 									<span class="item-name item-toggle" style="cursor: pointer;" data-tooltip="{{item.name}}">{{item.name}}</span>
 								</div>
@@ -191,6 +198,13 @@
 									<div class="item-image slide">
 										<img src="{{item.img}}" title="{{item.name}}" class="item-toggle" style="cursor: pointer;" />
 										<a class="rollable" data-roll-type="item" data-action="onRoll"><i class="fa-solid fa-dice-d20"></i></a>
+										{{#if item.modifiesWeapons}}
+											<a
+												class="item-toggle-mod {{ternary item.weaponModActive 'is-active' ''}}"
+												data-action="toggleWeaponMod"
+												title="{{localize 'op.toggleWeaponMod'}}: {{item.weaponModSummary}}"
+											><i class="{{ternary item.weaponModActive 'fas' 'far'}} fa-bolt"></i></a>
+										{{/if}}
 									</div>
 									<span class="item-name item-toggle" style="cursor: pointer;" data-tooltip="{{item.name}}">{{item.name}}</span>
 								</div>

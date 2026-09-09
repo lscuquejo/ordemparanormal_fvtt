@@ -50,6 +50,26 @@ export class ArmamentData extends foundry.abstract.TypeDataModel {
 				adaptableGrip: new fields.BooleanField({ initial: false }),
 				pistolBlow: new fields.BooleanField({ initial: false }),
 			}),
+			enchantments: new fields.ArrayField(
+				new fields.SchemaField({
+					id: new fields.StringField({ required: true }),
+					ritualId: new fields.StringField({ initial: "" }),
+					ritualName: new fields.StringField({ initial: "" }),
+					tierKey: new fields.StringField({ initial: "base" }),
+					tierLabel: new fields.StringField({ initial: "Base" }),
+					active: new fields.BooleanField({ initial: true }),
+					attackBonus: new fields.NumberField({ integer: true, initial: 0 }),
+					critMarginBonus: new fields.NumberField({ integer: true, initial: 0 }),
+					critMultiplierBonus: new fields.NumberField({ integer: true, initial: 0 }),
+					damageBonuses: new fields.ArrayField(new fields.StringField()),
+					damageType: new fields.StringField({ initial: "" }),
+					techModifications: new fields.ArrayField(new fields.StringField()),
+					element: new fields.StringField({ initial: "" }),
+					duration: new fields.StringField({ initial: "" }),
+					icon: new fields.StringField({ initial: "" }),
+				}),
+				{ initial: [] }
+			),
 		};
 	}
 

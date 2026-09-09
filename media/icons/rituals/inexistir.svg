@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-inexistir">
+<stop offset="0%" stop-color="#d4af37" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-inexistir)"/>
+
+<g transform="translate(0,0)" opacity="1">
+<ellipse cx="256" cy="280" rx="60" ry="90" fill="#ffd700" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round" paint-order="stroke fill" opacity="0.4"/>
+		 <circle cx="256" cy="180" r="40" fill="#ffd700" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round" paint-order="stroke fill" opacity="0.3"/>
+		 <path d="M180 200 L332 360 M332 200 L180 360" stroke="#ffd700" stroke-width="6" opacity="0.5"/>
+</g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-arma-atroz">
+<stop offset="0%" stop-color="#c8102e" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-arma-atroz)"/>
+
+<g transform="translate(0,0)" opacity="1">
+<path d="M256 100 L300 200 L270 200 L320 350 L256 280 L192 350 L242 200 L212 200 Z" fill="#ff2244" stroke="#000000" stroke-width="5" stroke-linejoin="round" paint-order="stroke fill"/>
+		 <path d="M220 350 Q256 320 292 350" fill="none" stroke="#000000" stroke-width="8"/>
+</g>
+</svg>

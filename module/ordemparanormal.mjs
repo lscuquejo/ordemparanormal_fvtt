@@ -30,6 +30,7 @@ import * as hooks from "./hooks.mjs";
 
 import * as utils from "./utils.mjs";
 import { handleReaction } from "./helpers/reactions.mjs";
+import { registerOpStatusEffects } from "./helpers/ritual-conditions.mjs";
 
 // import { rescueAllPathEffects } from '../utils/__test__/effects.mjs';
 
@@ -77,6 +78,7 @@ Hooks.once("init", function () {
 	CONFIG.ChatMessage.documentClass = documents.ChatMessageOP;
 	CONFIG.time.roundTime = 6; // Pg. 169 of the Book
 	CONFIG.Dice.D20Die = dice.D20Die;
+	registerOpStatusEffects();
 	CONFIG.Dice.BasicRoll = dice.BasicRoll;
 	CONFIG.Dice.D20Roll = dice.D20Roll;
 
@@ -198,6 +200,35 @@ Hooks.once("ready", function () {
 			if (actor.isOwner) await actor.applyDamage(data.amount, data.options);
 		}
 
+		if (data.type === "applyHealing") {
+			const sender = data.userId ? game.users.get(data.userId) : null;
+			const actor = await fromUuid(data.actorUuid);
+			if (!sender || !actor) return;
+			const senderAllowed = sender.isGM || actor.testUserPermission?.(sender, "OWNER");
+			if (!senderAllowed) return;
+			if (actor.isOwner) await actor.applyHealing(data.amount, data.options ?? {});
+		}
+
+		if (data.type === "applyTemporaryResource") {
+			const sender = data.userId ? game.users.get(data.userId) : null;
+			const actor = await fromUuid(data.actorUuid);
+			if (!sender || !actor) return;
+			const senderAllowed = sender.isGM || actor.testUserPermission?.(sender, "OWNER");
+			if (!senderAllowed) return;
+			if (actor.isOwner) {
+				await actor.applyTemporaryResource(data.resourceKey, data.amount, data.options ?? {});
+			}
+		}
+
+		if (data.type === "spendPE") {
+			const sender = data.userId ? game.users.get(data.userId) : null;
+			const actor = await fromUuid(data.actorUuid);
+			if (!sender || !actor) return;
+			const senderAllowed = sender.isGM || actor.testUserPermission?.(sender, "OWNER");
+			if (!senderAllowed) return;
+			if (actor.isOwner) await actor.spendPE(data.amount);
+		}
+
 		if (data.type === "opostoResult") {
 			if (!utils.isOpostoSenderAuthorized(data)) return;
 			await handleOpostoResult(data);
@@ -207,6 +238,16 @@ Hooks.once("ready", function () {
 			const sender = data.userId ? game.users.get(data.userId) : null;
 			if (!sender) return;
 			await handleReaction({ sender, payload: data.payload });
+		}
+
+		if (data.type === "applyEmbaralharMiss") {
+			const sender = data.userId ? game.users.get(data.userId) : null;
+			const defender = await fromUuid(data.defenderUuid);
+			if (!sender || !defender) return;
+			const attacker = data.attackerUuid ? await fromUuid(data.attackerUuid) : null;
+			const message = data.messageId ? game.messages.get(data.messageId) : null;
+			const { applyEmbaralharOnMiss } = await import("./helpers/ritual-effects.mjs");
+			await applyEmbaralharOnMiss(defender, { attacker, message });
 		}
 	});
 
@@ -409,6 +450,21 @@ Handlebars.registerHelper("ternary", function (condition, trueValue, falseValue)
 });
 
 /**
+ * Red penalty badge for a condition-affected stat (–1d20, –2 Defesa, +1 PE, …).
+ */
+Handlebars.registerHelper("opConditionPenalty", function (display, group, key) {
+	let statKey = key;
+	if (statKey && typeof statKey === "object" && statKey.hash) {
+		statKey = null;
+	}
+	const entry = statKey == null ? display?.[group] : display?.[group]?.[statKey];
+	if (!entry?.affected || !entry.label) return "";
+	const title = Handlebars.escapeExpression(entry.tooltip || "");
+	const label = Handlebars.escapeExpression(entry.label);
+	return new Handlebars.SafeString(`<span class="condition-penalty" title="${title}">(${label})</span>`);
+});
+
+/**
  * Optional `name="value"` for optional data attributes (e.g. data-token-id on chat cards).
  * @returns {Handlebars.SafeString} Empty when value is null/empty.
  */
@@ -505,6 +561,18 @@ Hooks.once("ready", function () {
  * unit-tested without booting Foundry.
  */
 async function handleChatCommandClick(event) {
+	const resistButton = event.target.closest("[data-action='ritualResistance']");
+	if (resistButton) {
+		const messageId = resistButton.closest(".message")?.dataset?.messageId;
+		const actorUuid = resistButton.dataset.actorUuid;
+		const message = messageId ? game.messages.get(messageId) : null;
+		if (message && actorUuid) {
+			resistButton.disabled = true;
+			await OrdemItem.rollRitualResistanceFromMessage(message, actorUuid);
+		}
+		return;
+	}
+
 	const dtButton = event.target.closest("[data-action='rollDT']");
 	if (dtButton) {
 		const skill = dtButton.dataset.skill;

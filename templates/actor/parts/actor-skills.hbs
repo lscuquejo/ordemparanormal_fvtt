@@ -2,7 +2,7 @@
 	<div class="skills-details">
 		<div class="skills-content">
 			{{#each system.skills as |skill key|}}
-				<div class="skill flexrow flex-group-center">
+				<div class="skill flexrow flex-group-center degree-{{skill.degree.label}} {{#if (lookup (lookup @root.conditionDisplay.skills key) 'affected')}}condition-affected{{/if}}">
 
 					{{! NOME DA PERÍCIA }}
 					{{#if skill.conditions.open}}
@@ -10,10 +10,11 @@
 							type="text"
 							name="system.skills.{{key}}.name"
 							value="{{skill.name}}"
-							class="resource-label flexlarge align-center"
+							class="resource-label flexlarge align-center {{#if (lookup (lookup @root.conditionDisplay.skills key) 'affected')}}condition-affected{{/if}}"
 							data-type="String"
 							placeholder="{{localize 'op.skill.freeSkill'}}"
 						/>
+						{{opConditionPenalty @root.conditionDisplay "skills" key}}
 						<i
 							class="fas fa-dice {{key}} rollable rollFreeSkill compendium-event-contextmenu"
 							data-action="onRollSkillCheck"
@@ -25,11 +26,11 @@
 						<label
 							for="system.skills.{{key}}.value"
 							data-action="onRollSkillCheck"
-							class="resource-label rollable flexlarge align-left skill-name compendium-event-contextmenu"
+							class="resource-label rollable flexlarge align-left skill-name compendium-event-contextmenu {{#if (lookup (lookup @root.conditionDisplay.skills key) 'affected')}}condition-affected{{/if}}"
 							data-label="{{skill.label}}"
 							data-key="{{key}}"
 							data-rollType="skill"
-						>{{skill.label}}</label>
+						>{{skill.label}} {{opConditionPenalty @root.conditionDisplay "skills" key}}</label>
 					{{/if}}
 
 					{{! ATRIBUTO }}
@@ -62,6 +63,27 @@
 						class="modifier"
 						placeholder="0"
 					/>
+
+					{{! DADOS EXTRAS/PENALIDADE (±d20) }}
+					<div class="flex0 dice-mod-wrapper" title="{{localize 'op.diceModTooltip'}}">
+						<button
+							type="button"
+							class="dice-mod-btn dice-mod-minus"
+							data-action="diceModDecrement"
+							data-skill="{{key}}"
+							tabindex="-1"
+						>−</button>
+						<span class="dice-mod-value {{#if skill.diceMod}}{{#if (gt skill.diceMod 0)}}positive{{else}}negative{{/if}}{{/if}}">
+							<i class="fas fa-dice-d20 dice-mod-icon"></i>{{#if skill.diceMod}}{{numberFormat skill.diceMod decimals=0 sign=true}}{{else}}0{{/if}}
+						</span>
+						<button
+							type="button"
+							class="dice-mod-btn dice-mod-plus"
+							data-action="diceModIncrement"
+							data-skill="{{key}}"
+							tabindex="-1"
+						>+</button>
+					</div>
 
 				</div>
 			{{/each}}

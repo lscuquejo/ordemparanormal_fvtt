@@ -1,7 +1,9 @@
 /* eslint-disable new-cap */
+import { prepareConditionSheetDisplay } from "../helpers/condition-effects.mjs";
 import { prepareActiveEffectCategories } from "../helpers/effects.mjs";
 import { ResistanceConfig } from "../applications/resistance-config.mjs";
 import { TraitsConfig } from "../applications/traits-config.mjs";
+import { getEffectiveAttributeValue } from "../helpers/ritual-effects.mjs";
 
 const { api, sheets } = foundry.applications;
 
@@ -150,6 +152,7 @@ export class OrdemThreatSheet extends api.HandlebarsApplicationMixin(sheets.Acto
 			threatSizes: CONFIG.op.dropdownThreatSize,
 			// Controle de Abas
 			tabs: this._getTabs(options.parts),
+			conditionDisplay: prepareConditionSheetDisplay(this.actor),
 		});
 
 		// Prepara visualização de Resistências e Características
@@ -235,7 +238,7 @@ export class OrdemThreatSheet extends api.HandlebarsApplicationMixin(sheets.Acto
 				if (i.system.formulas?.attack?.attr) attrKey = i.system.formulas.attack.attr;
 				if (i.system.formulas?.attack?.skill) skillKey = i.system.formulas.attack.skill;
 
-				const attrValue = this.actor.system.attributes[attrKey]?.value || 0;
+				const attrValue = getEffectiveAttributeValue(this.actor.system.attributes[attrKey]);
 				const diceString = attrValue > 0 ? `${attrValue}d20` : "2d20kl1";
 				const skillLabel = game.i18n.localize(`op.skill.${skillKey}`) || skillKey;
 
@@ -458,7 +461,7 @@ export class OrdemThreatSheet extends api.HandlebarsApplicationMixin(sheets.Acto
 		// `degree.override` (the input). Read it as the single source of truth
 		// so homebrew threats with off-grid values roll with the correct bonus.
 		const skillValue = skillData.degree?.value ?? 0;
-		const attrValue = this.document.system.attributes[attrKey]?.value || 0;
+		const attrValue = getEffectiveAttributeValue(this.document.system.attributes[attrKey]);
 
 		// 0 Atributo rola 2d20kl1, senão rola Xd20kh1
 		const diceFormula = attrValue > 0 ? `${attrValue}d20kh` : "2d20kl";

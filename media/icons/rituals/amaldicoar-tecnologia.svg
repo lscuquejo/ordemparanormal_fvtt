@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-amaldicoar-tecnologia">
+<stop offset="0%" stop-color="#00ff99" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+<filter id="glow-amaldicoar-tecnologia"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-amaldicoar-tecnologia)"/>
+<circle cx="200" cy="222" r="15" fill="#00ffff" opacity="0.55"/><circle cx="294" cy="207" r="13" fill="#ff00ff" opacity="0.55"/><circle cx="299" cy="299" r="19" fill="#ffff00" opacity="0.55"/><circle cx="208" cy="293" r="19" fill="#00ff00" opacity="0.55"/>
+<g transform="translate(0,0)" opacity="1" filter="url(#glow-amaldicoar-tecnologia)">
+<rect x="160" y="180" width="192" height="140" rx="12" fill="none" stroke="#00ffff" stroke-width="16"/>
+		 <path d="M180 220 L332 280 M332 220 L180 280" stroke="#00ffff" stroke-width="12"/>
+		 <circle cx="256" cy="380" r="20" fill="#00ffff"/>
+</g>
+</svg>

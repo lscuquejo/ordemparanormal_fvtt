@@ -291,6 +291,11 @@
 							font-size: 11px;
 							margin: 0;
 							font-weight: bold;
+
+							&.condition-affected {
+								color: #b92a4c;
+							}
+
 							span {
 								font-size: 9px;
 								color: #777;

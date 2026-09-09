@@ -2,8 +2,16 @@
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
 
-$font-primary: "Source Sans 3", sans-serif !default;
-$font-secondary: "Libre Baskerville", serif !default;
+// Ordem Paranormal — fontes temáticas
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
+
+$font-primary: "Raleway", "Source Sans 3", sans-serif !default;
+$font-secondary: "Cinzel", "Libre Baskerville", serif !default;
+
+// Ordem Paranormal typography
+$op-font-title: "Cinzel Decorative", "Cinzel", serif; // nome do personagem
+$op-font-header: "Cinzel", serif; // headers / labels
+$op-font-body: "Raleway", sans-serif; // corpo do texto
 
 $op-warnock: "Warnock Pro", $font-primary, "Arial";
 $op-optima: "Optima Nova LT PRO", $font-primary, "Arial";

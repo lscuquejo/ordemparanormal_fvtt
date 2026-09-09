@@ -85,6 +85,15 @@
 		{{#if data.formulas.damage}}
 			<button data-action="damage"><i class="fa-solid fa-dice"></i> {{localize "op.rollDmg"}}</button>
 		{{/if}}
+		{{#if ritualTiers.length}}
+			<button data-action="ritualCast"><i class="fa-solid fa-hand-sparkles"></i> {{localize "op.ritualCast"}}</button>
+		{{/if}}
+		{{#each ritualTiers}}
+			<button data-action="ritualRoll" data-roll-key="{{this.key}}">
+				<i class="fa-solid fa-dice"></i>
+				{{this.label}} — {{this.peCost}} PE{{#if this.formula}} ({{this.formula}}){{/if}}
+			</button>
+		{{/each}}
 	</div>
 	<footer class="card-footer">
 		{{#each info}}

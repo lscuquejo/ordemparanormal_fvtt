@@ -1,5 +1,8 @@
 import chatCommands from "./chat/chat-commands.mjs";
 import { shouldShowCombatantHP } from "./helpers/visibility.mjs";
+import { refreshActorsAffectedByRitualZones, unregisterRitualZoneByTemplate } from "./helpers/ritual-zones.mjs";
+import { getTemporaryResourceKeyFromEffect } from "./helpers/temporary-resources.mjs";
+import { applyConditionStartOfTurn } from "./helpers/condition-effects.mjs";
 
 // Module-level barrier for async effect expirations.
 //
@@ -23,6 +26,17 @@ export function getPendingExpirations() {
 	return _expirationsPromise;
 }
 
+async function _runConditionTurnStart(combat, updateData = {}) {
+	if (!game.user.isGM) return;
+	const firstGM = game.users.find((user) => user.isGM && user.active);
+	if (!firstGM || firstGM.id !== game.user.id) return;
+	const turnIndex = updateData?.turn ?? combat.turn ?? 0;
+	const combatant = combat.turns?.[turnIndex];
+	const actor = combatant?.actor;
+	if (!actor) return;
+	await applyConditionStartOfTurn(actor);
+}
+
 // Pure expiration runner. Keep ALL the original logic here — the wrapper below
 // is just the chain bookkeeping. IMPORTANT (Foundry v13): `combatTurn` and
 // `combatRound` disparam ANTES do commit do update — `combat.round` / `combat.turn`
@@ -43,20 +57,34 @@ async function _runExpireTemporaryEffects(combat, updateData = {}) {
 	// barato e evita disparar múltiplas re-renders no mesmo Actor/Item.
 	const byParent = new Map();
 	const namesByActor = new Map();
+	const tempClears = new Map();
 
 	for (const combatant of combat.combatants ?? []) {
 		const actor = combatant.actor;
 		if (!actor) continue;
 
 		for (const effect of actor.allApplicableEffects()) {
-			if (effect.disabled || !effect.isTemporary) continue;
-			const dur = effect.duration;
+			if (effect.disabled) continue;
+			// Prefer `_source.duration`: Foundry's prepared `effect.duration` is an
+			// expanded object (type/remaining/label) that may omit startRound/rounds/
+			// turns — which made every roundsLeft/turnsLeft check resolve to Infinity
+			// so temporary effects never expired. Also re-derive "temporary" from
+			// source in case prepared duration dropped those fields and isTemporary
+			// flipped to false.
+			const dur = effect._source?.duration ?? effect.duration;
 			if (!dur) continue;
+			const isTemp =
+				effect.isTemporary || dur.rounds != null || dur.turns != null || dur.seconds != null || Boolean(dur.combat);
+			if (!isTemp) continue;
 
-			const roundsLeft =
-				dur.startRound != null && dur.rounds != null ? dur.rounds - (nextRound - dur.startRound) : Infinity;
-			let roundsElapsed = dur.startRound != null ? nextRound - dur.startRound : 0;
-			let turnsElapsed = dur.startTurn != null ? nextTurn - dur.startTurn : 0;
+			const startRound = dur.startRound;
+			const startTurn = dur.startTurn;
+			const rounds = dur.rounds;
+			const turns = dur.turns;
+
+			const roundsLeft = startRound != null && rounds != null ? rounds - (nextRound - startRound) : Infinity;
+			let roundsElapsed = startRound != null ? nextRound - startRound : 0;
+			let turnsElapsed = startTurn != null ? nextTurn - startTurn : 0;
 			// Wrap-around: quando a rodada avança, `nextTurn` cai para 0 e pode
 			// ficar menor que `dur.startTurn`. Sem ajuste, `turnsElapsed` vira
 			// negativo e cancela parte do `roundsElapsed * turnsPerRound`,
@@ -66,7 +94,7 @@ async function _runExpireTemporaryEffects(combat, updateData = {}) {
 				roundsElapsed -= 1;
 			}
 			const totalTurns = roundsElapsed * turnsPerRound + turnsElapsed;
-			const turnsLeft = dur.turns != null ? dur.turns - totalTurns : Infinity;
+			const turnsLeft = turns != null ? turns - totalTurns : Infinity;
 			if (roundsLeft > 0 && turnsLeft > 0) continue;
 
 			const parent = effect.parent;
@@ -75,8 +103,24 @@ async function _runExpireTemporaryEffects(combat, updateData = {}) {
 			if (!byParent.has(key)) byParent.set(key, { parent, ids: [] });
 			byParent.get(key).ids.push(effect.id);
 
+			const tempKey = getTemporaryResourceKeyFromEffect(effect);
+			if (tempKey) {
+				if (!tempClears.has(key)) tempClears.set(key, { parent, keys: new Set() });
+				tempClears.get(key).keys.add(tempKey);
+			}
+
 			if (!namesByActor.has(actor.uuid)) namesByActor.set(actor.uuid, { actor, names: [] });
 			namesByActor.get(actor.uuid).names.push(effect.name);
+		}
+	}
+
+	for (const { parent, keys } of tempClears.values()) {
+		const updateData = {};
+		for (const resourceKey of keys) updateData[`system.${resourceKey}.temp`] = 0;
+		try {
+			await parent.update(updateData);
+		} catch (err) {
+			console.warn("ordemparanormal | falha ao limpar recurso temporário", err);
 		}
 	}
 
@@ -114,9 +158,44 @@ async function _runExpireTemporaryEffects(combat, updateData = {}) {
 // chain — we swallow the error on the awaitable side and let the inner
 // console.warn surface the diagnostic.
 function _expireTemporaryEffects(combat, updateData) {
-	const next = _expirationsPromise.then(() => _runExpireTemporaryEffects(combat, updateData));
+	const next = _expirationsPromise
+		.then(() => _runExpireTemporaryEffects(combat, updateData))
+		.then(() => _expireTurnWeaponEnchantments(combat));
 	_expirationsPromise = next.catch(() => {});
 	return next;
+}
+
+/**
+ * Remove armament enchantments flagged with remainingTurns (e.g. Decadência Discente).
+ * @param {Combat} _combat
+ */
+async function _expireTurnWeaponEnchantments(_combat) {
+	if (!game.user.isGM) return;
+	const firstGM = game.users.find((u) => u.isGM && u.active);
+	if (!firstGM || firstGM.id !== game.user.id) return;
+
+	for (const actor of game.actors) {
+		for (const item of actor.items.filter((entry) => entry.type === "armament")) {
+			const enchantments = item.system?.enchantments ?? [];
+			if (!enchantments.some((entry) => Number.isFinite(entry.remainingTurns))) continue;
+
+			const next = [];
+			let changed = false;
+			for (const entry of enchantments) {
+				if (!Number.isFinite(entry.remainingTurns)) {
+					next.push(entry);
+					continue;
+				}
+				if (entry.remainingTurns <= 1) {
+					changed = true;
+					continue;
+				}
+				next.push({ ...entry, remainingTurns: entry.remainingTurns - 1 });
+				changed = true;
+			}
+			if (changed) await item.update({ "system.enchantments": next });
+		}
+	}
 }
 
 /** */
@@ -124,8 +203,45 @@ export default function () {
 	// Register chat commands (/dt, /oposto)
 	chatCommands();
 
-	Hooks.on("combatTurn", (combat, updateData) => _expireTemporaryEffects(combat, updateData));
-	Hooks.on("combatRound", (combat, updateData) => _expireTemporaryEffects(combat, updateData));
+	Hooks.on("combatTurn", (combat, updateData) => {
+		_expireTemporaryEffects(combat, updateData);
+		_runConditionTurnStart(combat, updateData);
+	});
+	Hooks.on("combatRound", (combat, updateData) => {
+		_expireTemporaryEffects(combat, updateData);
+		_runConditionTurnStart(combat, updateData);
+	});
+
+	const cleanupRitualZoneTemplate = (doc) => {
+		if (game.user.isGM) unregisterRitualZoneByTemplate(doc.id);
+	};
+	Hooks.on("deleteMeasuredTemplateDocument", cleanupRitualZoneTemplate);
+	Hooks.on("deleteMeasuredTemplate", cleanupRitualZoneTemplate);
+	Hooks.on("deleteRegionDocument", cleanupRitualZoneTemplate);
+	Hooks.on("deleteRegion", cleanupRitualZoneTemplate);
+
+	// Recompute Cinerária +5 DT (and other zone effects) when tokens move in/out.
+	const refreshZoneSheets = () => {
+		try {
+			refreshActorsAffectedByRitualZones();
+		} catch (_error) {
+			/* ignore */
+		}
+	};
+	Hooks.on("updateToken", (tokenDoc, changes) => {
+		if (changes.x != null || changes.y != null || changes.elevation != null) refreshZoneSheets();
+	});
+	Hooks.on("createToken", refreshZoneSheets);
+	Hooks.on("deleteToken", refreshZoneSheets);
+	Hooks.on("canvasReady", refreshZoneSheets);
+
+	Hooks.on("deleteActiveEffect", async (effect, options) => {
+		if (options?.ordemparanormal?.skipTemporaryResourceClear) return;
+		const resourceKey = getTemporaryResourceKeyFromEffect(effect);
+		const parent = effect.parent;
+		if (!resourceKey || !parent) return;
+		await parent.update({ [`system.${resourceKey}.temp`]: 0 });
+	});
 	/**
 	 * Criando o Hook preCreateActor para o módulo Bar Brawl adicionar
 	 * uma terceira barra nos tokens criados, essa barra ira representar
@@ -378,6 +494,12 @@ export default function () {
 			if (!pending || pending.defenderUuid !== actorUuid) continue;
 			ui.chat?.updateMessage?.(msg);
 		}
+	});
+
+	// Inject ritual apply/resistance controls on every chat render path (v13).
+	Hooks.on("renderChatMessageHTML", (message, html) => {
+		message._displayChatActionButtons?.(html);
+		message._highlightCriticalSuccessFailure?.(html);
 	});
 
 	// Re-render the most recent item card when targeting changes so target-info stays current

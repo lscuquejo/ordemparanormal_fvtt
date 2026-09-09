@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-embaralhar">
+<stop offset="0%" stop-color="#00ff99" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+<filter id="glow-embaralhar"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-embaralhar)"/>
+<circle cx="277" cy="220" r="4" fill="#00ffff" opacity="0.55"/><circle cx="289" cy="281" r="-2" fill="#ff00ff" opacity="0.55"/><circle cx="221" cy="292" r="6" fill="#ffff00" opacity="0.55"/><circle cx="221" cy="213" r="1" fill="#00ff00" opacity="0.55"/>
+<g transform="translate(0,0)" opacity="1" filter="url(#glow-embaralhar)">
+<rect x="180" y="200" width="80" height="120" rx="6" fill="#00ffff" transform="rotate(-15 220 260)"/>
+		 <rect x="220" y="190" width="80" height="120" rx="6" fill="#00ffff" opacity="0.8"/>
+		 <rect x="260" y="200" width="80" height="120" rx="6" fill="#00ffff" transform="rotate(15 300 260)"/>
+</g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-chamas-do-caos">
+<stop offset="0%" stop-color="#00ff99" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+<filter id="glow-chamas-do-caos"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-chamas-do-caos)"/>
+<circle cx="296" cy="275" r="5" fill="#00ffff" opacity="0.55"/><circle cx="228" cy="300" r="6" fill="#ff00ff" opacity="0.55"/><circle cx="220" cy="227" r="1" fill="#ffff00" opacity="0.55"/><circle cx="287" cy="226" r="4" fill="#00ff00" opacity="0.55"/>
+<g transform="translate(0,0)" opacity="1" filter="url(#glow-chamas-do-caos)">
+<path d="M256 400 Q200 320 220 240 Q180 280 200 180 Q256 120 312 180 Q332 280 292 240 Q312 320 256 400" fill="#00ffff"/>
+		 <path d="M256 400 Q240 300 256 220 Q272 300 256 400" fill="#ff00ff" opacity="0.7"/>
+</g>
+</svg>

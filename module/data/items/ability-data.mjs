@@ -10,6 +10,15 @@ export class AbilityData extends foundry.abstract.TypeDataModel {
 			preRequisite: new fields.StringField({ initial: "" }),
 			activation: new fields.StringField({ initial: "" }),
 			costType: new fields.StringField({ initial: "PE" }),
+			modifiesWeapons: new fields.BooleanField({ initial: false }),
+			using: new fields.SchemaField({
+				state: new fields.BooleanField({ initial: false }),
+				class: new fields.StringField({ initial: "far" }),
+			}),
+			weaponMod: new fields.SchemaField({
+				attackBonus: new fields.NumberField({ integer: true, initial: 0 }),
+				damageBonus: new fields.StringField({ initial: "" }),
+			}),
 		};
 	}
 

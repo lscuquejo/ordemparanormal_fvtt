@@ -27,6 +27,7 @@ describe("AgentData.defineSchema()", () => {
 		expect(Object.keys(schema)).toContain("origin");
 		expect(Object.keys(schema)).toContain("trilha");
 		expect(Object.keys(schema)).toContain("patent");
+		expect(Object.keys(schema)).toContain("age");
 	});
 
 	it("attributes schema has all 5 attributes", () => {

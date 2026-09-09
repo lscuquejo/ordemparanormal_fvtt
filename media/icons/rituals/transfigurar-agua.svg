@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-transfigurar-agua">
+<stop offset="0%" stop-color="#00ff99" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+<filter id="glow-transfigurar-agua"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-transfigurar-agua)"/>
+<circle cx="236" cy="301" r="-2" fill="#00ffff" opacity="0.55"/><circle cx="209" cy="228" r="5" fill="#ff00ff" opacity="0.55"/><circle cx="291" cy="211" r="-2" fill="#ffff00" opacity="0.55"/><circle cx="297" cy="297" r="2" fill="#00ff00" opacity="0.55"/>
+<g transform="translate(0,0)" opacity="1" filter="url(#glow-transfigurar-agua)">
+<path d="M256 140 Q200 200 200 260 Q200 340 256 380 Q312 340 312 260 Q312 200 256 140" fill="#00ffff" opacity="0.6"/>
+		 <path d="M230 260 Q256 240 282 260 Q256 280 230 260" fill="#ff00ff" opacity="0.5"/>
+</g>
+</svg>

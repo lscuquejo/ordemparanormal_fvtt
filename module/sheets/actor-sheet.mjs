@@ -2,7 +2,26 @@
 // TABS: https://foundryvtt.wiki/en/development/guides/Tabs-and-Templates/Tabs-in-AppV2
 
 import { AgentConfigApp } from "../applications/agent-config-app.mjs";
+import { createAttackProfileId, prepareAttackProfileRows } from "../helpers/attack-profiles.mjs";
 import { prepareActiveEffectCategories } from "../helpers/effects.mjs";
+import {
+	canLevelUpNex,
+	canLevelUpNivel,
+	canLevelUpStage,
+	getNextNexValue,
+	getNextNivelValue,
+	getNextStageValue,
+	NEX_MAX,
+} from "../helpers/actor-calculations.mjs";
+import { prepareConditionSheetDisplay } from "../helpers/condition-effects.mjs";
+import { getActiveStatBonuses, prepareActiveRdDisplay } from "../helpers/ritual-effects.mjs";
+import { removeEnchantmentFromWeapon, toggleEnchantmentOnWeapon } from "../helpers/ritual-enchantments.mjs";
+import { getRitualSheetTargetLabel, getRitualZoneDtBonus } from "../helpers/ritual-zones.mjs";
+import {
+	getActiveWeaponModifiers,
+	getEffectiveCriticalFormula,
+	itemModifiesWeapons,
+} from "../helpers/weapon-modifiers.mjs";
 
 const { api, sheets } = foundry.applications;
 // const TextEditor = foundry.applications.ux.TextEditor.implementation;
@@ -39,9 +58,23 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 			deleteDoc: this._deleteDoc,
 			toggleEffect: this._toggleEffect,
 			onRoll: this.#onRoll,
+			ritualCast: this.#onRitualCast,
+			toggleWeaponMod: this.#onToggleWeaponMod,
+			createAttackProfile: this.#onCreateAttackProfile,
+			editAttackProfile: this.#onEditAttackProfile,
+			deleteAttackProfile: this.#onDeleteAttackProfile,
+			rollAttackProfile: this.#onRollAttackProfile,
+			toggleWeaponEnchantment: this.#onToggleWeaponEnchantment,
+			removeWeaponEnchantment: this.#onRemoveWeaponEnchantment,
 			onRollSkillCheck: this.#onRollSkillCheck,
 			onRollAttributeTest: this.#onRollAttributeTest,
+			diceModIncrement: this.#onDiceModChange,
+			diceModDecrement: this.#onDiceModChange,
 			toggleResources: this._onToggleResources,
+			toggleManualEdit: this.#onToggleManualEdit,
+			enableManualEdit: this.#onEnableManualEdit,
+			restoreAutomation: this.#onRestoreAutomation,
+			levelUpProgress: this.#onLevelUpProgress,
 			openConfig: this.#openConfig,
 			findItem: this.#findItem,
 		},
@@ -59,6 +92,11 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 		inventory: {
 			id: "inventory",
 			template: "systems/ordemparanormal/templates/actor/parts/actor-inventory.hbs",
+			scrollable: [""],
+		},
+		attacks: {
+			id: "attacks",
+			template: "systems/ordemparanormal/templates/actor/parts/actor-attacks.hbs",
 			scrollable: [""],
 		},
 		abilities: {
@@ -86,6 +124,7 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 			tabs: [
 				{ id: "skills", label: "op.tab.skills" },
 				{ id: "inventory", label: "op.tab.inventory" },
+				{ id: "attacks", label: "op.tab.attacks" },
 				{ id: "abilities", label: "op.tab.abilities" },
 				{ id: "rituals", label: "op.tab.rituals" },
 				{ id: "biography", label: "op.tab.biography" },
@@ -105,7 +144,7 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 		// Control which parts show based on document subtype
 		switch (this.document.type) {
 			case "agent":
-				options.parts.push("skills", "inventory", "abilities", "rituals", "biography", "effects");
+				options.parts.push("skills", "inventory", "attacks", "abilities", "rituals", "biography", "effects");
 				break;
 		}
 	}
@@ -143,12 +182,67 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 			tabs: this._getTabs(options.parts),
 			costLabel: this.usingWithoutSanityRule ? "PD" : "PE",
 			skillTotals: this._prepareSkillTotals(this.options.document.system.skills),
+			lockDerivedFields: !this.actor.system.fieldsUnlocked,
+			statBonuses: getActiveStatBonuses(this.actor),
+			conditionDisplay: prepareConditionSheetDisplay(this.actor),
+			activeRd: prepareActiveRdDisplay(this.actor),
+			progressControl: this._prepareProgressControl(),
+			resourceTemps: this._prepareResourceTemps(this.options.document.system),
+			ritualDtZoneBonus: getRitualZoneDtBonus(this.actor),
 		});
 
 		// Prepara os dados do Agente e seus Items.
 		await this._prepareItems(context);
 
 		return context;
+	}
+
+	/**
+	 * @returns {object}
+	 */
+	/**
+	 * @param {object} sys
+	 * @returns {Record<string, string>}
+	 */
+	_prepareResourceTemps(sys) {
+		const format = (resource) => {
+			const temp = Number(resource?.temp ?? 0);
+			return temp > 0 ? `(${temp})` : "";
+		};
+		return {
+			PV: format(sys.PV),
+			SAN: format(sys.SAN),
+			PE: format(sys.PE),
+			PD: format(sys.PD),
+		};
+	}
+
+	_prepareProgressControl() {
+		const sys = this.actor.system;
+		const nexValue = Number(sys.NEX?.value) || 0;
+		const nivelValue = Number(sys.nivel?.value) || 0;
+		const stageValue = Number(sys.stage?.value) || 0;
+
+		return {
+			nex: {
+				value: nexValue,
+				display: `${nexValue}%`,
+				canLevelUp: canLevelUpNex(nexValue),
+				next: getNextNexValue(nexValue),
+			},
+			nivel: {
+				value: nivelValue,
+				display: String(nivelValue),
+				canLevelUp: canLevelUpNivel(nivelValue),
+				next: getNextNivelValue(nivelValue),
+			},
+			stage: {
+				value: stageValue,
+				display: String(stageValue),
+				canLevelUp: canLevelUpStage(stageValue),
+				next: getNextStageValue(stageValue),
+			},
+		};
 	}
 
 	/** */
@@ -187,8 +281,10 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 			case "skills":
 			case "abilities":
 			case "inventory":
+			case "attacks":
 			case "rituals":
 				context.tab = context.tabs[partId];
+				if (partId === "attacks") this._prepareAttackProfiles(context);
 				break;
 			case "effects":
 				context.tab = context.tabs[partId];
@@ -349,6 +445,20 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 			}
 			// Append to armament.
 			else if (i.type === "armament") {
+				const activeEnchants = (i.system.enchantments ?? []).filter((e) => e.active);
+				i.enchantmentLabels = activeEnchants.map((e) => e.ritualName);
+				i.effectiveCritical = getEffectiveCriticalFormula(i);
+				i.hasEnchantments = (i.system.enchantments ?? []).length > 0;
+				i.enchantmentsList = (i.system.enchantments ?? []).map((e) => ({
+					...e,
+					summary: [
+						e.attackBonus ? `+${e.attackBonus} atk` : null,
+						e.critMarginBonus ? `+${e.critMarginBonus} crit` : null,
+						e.damageBonuses?.length ? `+${e.damageBonuses.join("+")}` : null,
+					]
+						.filter(Boolean)
+						.join(", "),
+				}));
 				armament.push(i);
 			}
 			// Append to item.
@@ -357,6 +467,7 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 			}
 			// Append to rituals.
 			else if (i.type === "ritual") {
+				i.sheetTargetLabel = getRitualSheetTargetLabel(i);
 				if (i.system.circle != 5) rituals.valid[i.system.circle].push(i);
 				else rituals.invalid.push(i);
 			}
@@ -372,6 +483,16 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 					i.activationLabel = game.i18n.localize(`op.executionChoices.${i.system.activation}`);
 				} else {
 					i.activationLabel = "—";
+				}
+
+				i.modifiesWeapons = itemModifiesWeapons(i);
+				if (i.modifiesWeapons) {
+					i.weaponModActive = Boolean(i.system.using?.state);
+					const atk = Number(i.system.weaponMod?.attackBonus) || 0;
+					const dmg = i.system.weaponMod?.damageBonus || "";
+					i.weaponModSummary = [atk ? `+${atk} ${game.i18n.localize("op.attack")}` : null, dmg ? `+${dmg}` : null]
+						.filter(Boolean)
+						.join(", ");
 				}
 
 				if (abilityType === "origin") abilities.valid[1].push(i);
@@ -404,6 +525,31 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 		context.protection = protection.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 		context.generalEquip = generalEquipment.sort((a, b) => (a.sort || 0) - (b.sort || 0));
 		context.armament = armament.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+	}
+
+	/** @param {object} context */
+	_prepareAttackProfiles(context) {
+		const rows = prepareAttackProfileRows(this.actor);
+		context.attackProfiles = rows.map((row) => {
+			const baseItem = this.actor.items.get(row.baseArmamentId);
+			return {
+				...row,
+				img: baseItem?.img ?? "icons/svg/sword.svg",
+			};
+		});
+
+		const mods = getActiveWeaponModifiers(this.actor);
+		context.activeWeaponMods = this.actor.items
+			.filter((item) => itemModifiesWeapons(item) && item.system.using?.state)
+			.map((item) => {
+				const atk = Number(item.system.weaponMod?.attackBonus) || 0;
+				const dmg = item.system.weaponMod?.damageBonus || "";
+				const parts = [atk ? `+${atk} atk` : null, dmg ? `+${dmg}` : null].filter(Boolean);
+				return { name: item.name, summary: parts.join(", ") || "—" };
+			});
+		if (!context.activeWeaponMods.length && mods.sources.length) {
+			context.activeWeaponMods = mods.sources.map((name) => ({ name, summary: "—" }));
+		}
 	}
 
 	/**
@@ -469,6 +615,16 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 		if (this.actor.isOwner) {
 			// unshift() coloca o botão no começo da fila (mais à esquerda entre os botões da direita).
 			controls.unshift({
+				action: "restoreAutomation",
+				icon: "fas fa-calculator",
+				label: game.i18n.localize("op.restoreAutomation"),
+			});
+			controls.unshift({
+				action: "enableManualEdit",
+				icon: "fas fa-unlock",
+				label: game.i18n.localize("op.manualEdit"),
+			});
+			controls.unshift({
 				action: "openConfig",
 				icon: "fas fa-id-card",
 				label: game.i18n.localize("op.agentConfigTitleWindowNoName"),
@@ -521,6 +677,106 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 	static #openConfig(event, target) {
 		event.preventDefault();
 		new AgentConfigApp(this.document).render({ force: true });
+	}
+
+	/**
+	 * Read unsaved form values for derived fields before locking the sheet.
+	 * @returns {Record<string, unknown>}
+	 */
+	_collectFormOverrides() {
+		if (!this.form) return {};
+		const formData = new FormDataExtended(this.form);
+		const sys = foundry.utils.expandObject(formData.object).system;
+		if (!sys) return {};
+
+		const update = {};
+		const addNumber = (overrideKey, value, systemKey) => {
+			if (value === undefined || value === null || value === "") return;
+			const num = Number(value);
+			if (!Number.isFinite(num)) return;
+			update[`system.overrides.${overrideKey}`] = num;
+			update[`system.${systemKey}`] = num;
+		};
+		const addOverrideNumber = (overrideKey, value) => {
+			if (value === undefined || value === null || value === "") return;
+			const num = Number(value);
+			if (!Number.isFinite(num)) return;
+			update[`system.overrides.${overrideKey}`] = num;
+		};
+		const addString = (overrideKey, value, systemKey) => {
+			if (typeof value !== "string" || !value.length) return;
+			update[`system.overrides.${overrideKey}`] = value;
+			update[`system.${systemKey}`] = value;
+		};
+
+		if (sys.PV) addNumber("PVMax", sys.PV.max, "PV.max");
+		if (sys.SAN) addNumber("SANMax", sys.SAN.max, "SAN.max");
+		if (sys.PE) {
+			addNumber("PEMax", sys.PE.max, "PE.max");
+			addNumber("PEPerRound", sys.PE.perRound, "PE.perRound");
+		}
+		if (sys.PD) {
+			addNumber("PDMax", sys.PD.max, "PD.max");
+			addNumber("PDPerRound", sys.PD.perRound, "PD.perRound");
+		}
+		// Defense/dodge/desloc on the sheet are derived totals — persist only as overrides.
+		if (sys.defense) {
+			addOverrideNumber("defense", sys.defense.value);
+			addOverrideNumber("dodge", sys.defense.dodge);
+		}
+		if (sys.desloc) addOverrideNumber("desloc", sys.desloc.value);
+		if (sys.patent) {
+			addString("patentName", sys.patent.name, "patent.name");
+			addNumber("itemLimit1", sys.patent.itemLimit1, "patent.itemLimit1");
+			addNumber("itemLimit2", sys.patent.itemLimit2, "patent.itemLimit2");
+			addNumber("itemLimit3", sys.patent.itemLimit3, "patent.itemLimit3");
+			addNumber("itemLimit4", sys.patent.itemLimit4, "patent.itemLimit4");
+		}
+		return update;
+	}
+
+	async _setFieldsUnlocked(unlocked) {
+		const actor = this.actor;
+		if (Boolean(actor.system.fieldsUnlocked) === unlocked) return;
+		const update = {
+			"system.fieldsUnlocked": unlocked,
+			"system.disableCalculations": true,
+		};
+		Object.assign(update, actor._snapshotManualOverrides());
+		if (!unlocked && actor.system.fieldsUnlocked) {
+			Object.assign(update, this._collectFormOverrides());
+		}
+		await actor.update(update);
+		ui.notifications.info(game.i18n.localize(unlocked ? "op.manualEditEnabled" : "op.fieldsLocked"));
+	}
+
+	async _setManualEditMode(enabled) {
+		const actor = this.actor;
+		if (enabled) return this._setFieldsUnlocked(true);
+		const update = actor._clearManualOverrides();
+		update["system.disableCalculations"] = false;
+		update["system.fieldsUnlocked"] = false;
+		Object.assign(update, actor._resetDerivedStatBases());
+		await actor.update(update);
+		ui.notifications.info(game.i18n.localize("op.manualEditDisabled"));
+	}
+
+	static async #onEnableManualEdit(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		await this._setFieldsUnlocked(!this.actor.system.fieldsUnlocked);
+	}
+
+	static async #onRestoreAutomation(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		await this._setManualEditMode(false);
+	}
+
+	static async #onToggleManualEdit(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		await this._setFieldsUnlocked(!this.actor.system.fieldsUnlocked);
 	}
 
 	/**
@@ -841,9 +1097,224 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 			if (dataset.rollType == "item") {
 				const itemId = target.closest(".item").dataset.itemId;
 				const item = this.actor.items.get(itemId);
-				if (item) return item.roll();
+				if (!item) return;
+				if (item.type === "ritual") return item.useRitual();
+				return item.roll();
 			}
 		}
+	}
+
+	static async #onRitualCast(event, target) {
+		event.preventDefault();
+		const itemId = target.closest(".item")?.dataset.itemId;
+		const item = itemId ? this.actor.items.get(itemId) : null;
+		if (item?.type === "ritual") await item.useRitual();
+	}
+
+	static #buildAttackProfileDialogContent(actor, existing = null) {
+		const armaments = actor.items.filter((i) => i.type === "armament");
+		const weaponOpts = armaments
+			.map(
+				(item) =>
+					`<option value="${item.id}" ${existing?.baseArmamentId === item.id ? "selected" : ""}>${item.name}</option>`
+			)
+			.join("");
+		const damageTypes = CONFIG.op?.dropdownDamageType ?? {};
+		const dmgTypeOpts = Object.entries(damageTypes)
+			.map(
+				([key, label]) =>
+					`<option value="${key}" ${existing?.damageTypeOverride === key ? "selected" : ""}>${game.i18n.localize(
+						label
+					)}</option>`
+			)
+			.join("");
+
+		return `
+<div class="attack-profile-dialog" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:4px;">
+  <label style="grid-column:1/-1;">${game.i18n.localize("op.name")}<input name="name" type="text" value="${
+			existing?.name ?? ""
+		}" style="width:100%;margin-top:2px;" /></label>
+  <label style="grid-column:1/-1;">${game.i18n.localize(
+			"op.baseWeapon"
+		)}<select name="baseArmamentId" style="width:100%;margin-top:2px;"><option value="">—</option>${weaponOpts}</select></label>
+  <label>${game.i18n.localize("op.attackBonus")}<input name="attackBonus" type="number" value="${
+			existing?.attackBonus ?? 0
+		}" style="width:100%;margin-top:2px;" /></label>
+  <label>${game.i18n.localize("op.peCost")}<input name="peCost" type="number" min="0" value="${
+			existing?.peCost ?? 0
+		}" style="width:100%;margin-top:2px;" /></label>
+  <label>${game.i18n.localize("op.damageBonusFormula")}<input name="damageBonus" type="text" value="${
+			existing?.damageBonus ?? ""
+		}" placeholder="1d6" style="width:100%;margin-top:2px;" /></label>
+  <label>${game.i18n.localize("op.damageFormulaOverride")}<input name="damageFormulaOverride" type="text" value="${
+			existing?.damageFormulaOverride ?? ""
+		}" placeholder="2d8+2" style="width:100%;margin-top:2px;" /></label>
+  <label>${game.i18n.localize(
+			"op.damageTypeOverride"
+		)}<select name="damageTypeOverride" style="width:100%;margin-top:2px;"><option value="">—</option>${dmgTypeOpts}</select></label>
+  <label style="grid-column:1/-1;">${game.i18n.localize("op.notes")}<input name="notes" type="text" value="${
+			existing?.notes ?? ""
+		}" style="width:100%;margin-top:2px;" /></label>
+</div>`;
+	}
+
+	static #attackProfileFormToData(data, existingId = null) {
+		return {
+			id: existingId ?? createAttackProfileId(),
+			name: data.name || game.i18n.localize("op.attack"),
+			baseArmamentId: data.baseArmamentId || "",
+			attackBonus: Number(data.attackBonus) || 0,
+			damageBonus: data.damageBonus || "",
+			damageFormulaOverride: data.damageFormulaOverride || "",
+			damageTypeOverride: data.damageTypeOverride || "",
+			peCost: Number(data.peCost) || 0,
+			notes: data.notes || "",
+		};
+	}
+
+	static async #onCreateAttackProfile(event) {
+		event.preventDefault();
+		const result = await foundry.applications.api.DialogV2.prompt({
+			window: { title: game.i18n.localize("op.addAttackProfile") },
+			content: OrdemActorSheet.#buildAttackProfileDialogContent(this.actor),
+			ok: {
+				label: game.i18n.localize("op.addAttackProfile"),
+				callback: (_event, button) => new FormDataExtended(button.form).object,
+			},
+		});
+		if (!result?.name) return;
+		const profiles = [...(this.actor.system.attackProfiles ?? [])];
+		profiles.push(OrdemActorSheet.#attackProfileFormToData(result));
+		await this.actor.update({ "system.attackProfiles": profiles });
+	}
+
+	static async #onEditAttackProfile(event, target) {
+		event.preventDefault();
+		const profileId = target.closest("[data-profile-id]")?.dataset.profileId;
+		const profiles = [...(this.actor.system.attackProfiles ?? [])];
+		const index = profiles.findIndex((entry) => entry.id === profileId);
+		if (index < 0) return;
+
+		const result = await foundry.applications.api.DialogV2.prompt({
+			window: { title: game.i18n.localize("op.editAttackProfile") },
+			content: OrdemActorSheet.#buildAttackProfileDialogContent(this.actor, profiles[index]),
+			ok: {
+				label: game.i18n.localize("op.saveChanges"),
+				callback: (_event, button) => new FormDataExtended(button.form).object,
+			},
+		});
+		if (!result) return;
+		profiles[index] = OrdemActorSheet.#attackProfileFormToData(result, profiles[index].id);
+		await this.actor.update({ "system.attackProfiles": profiles });
+	}
+
+	static async #onDeleteAttackProfile(event, target) {
+		event.preventDefault();
+		const profileId = target.closest("[data-profile-id]")?.dataset.profileId;
+		const profiles = (this.actor.system.attackProfiles ?? []).filter((entry) => entry.id !== profileId);
+		await this.actor.update({ "system.attackProfiles": profiles });
+	}
+
+	static async #onRollAttackProfile(event, target) {
+		event.preventDefault();
+		const profileId = target.closest("[data-profile-id]")?.dataset.profileId;
+		const profile = (this.actor.system.attackProfiles ?? []).find((entry) => entry.id === profileId);
+		if (!profile) return;
+		const baseItem = this.actor.items.get(profile.baseArmamentId);
+		if (!baseItem) {
+			ui.notifications.warn(game.i18n.localize("op.attackProfileMissingWeapon"));
+			return;
+		}
+		await baseItem.rollAttackProfile(profile);
+	}
+
+	static async #onToggleWeaponEnchantment(event, target) {
+		event.preventDefault();
+		const itemId = target.closest(".item")?.dataset.itemId;
+		const enchantId = target.closest("[data-enchant-id]")?.dataset.enchantId;
+		const item = itemId ? this.actor.items.get(itemId) : null;
+		if (!item || !enchantId) return;
+		await toggleEnchantmentOnWeapon(item, enchantId);
+	}
+
+	static async #onLevelUpProgress(event, target) {
+		event.preventDefault();
+		if (!this.isEditable) return;
+
+		const field = target.dataset.progressField;
+		const sys = this.actor.system;
+
+		if (field === "stage" || (this.isSurvivor && !field)) {
+			const current = Number(sys.stage?.value) || 0;
+			if (!canLevelUpStage(current)) {
+				ui.notifications.warn(game.i18n.localize("op.progressMaxReached"));
+				return;
+			}
+			const next = getNextStageValue(current);
+			await this.actor.update({ "system.stage.value": next });
+			ui.notifications.info(game.i18n.format("op.levelUpStageMessage", { value: next }));
+			return;
+		}
+
+		if (field === "nivel" || (this.progressRuleIsNivel && !field)) {
+			const current = Number(sys.nivel?.value) || 0;
+			if (!canLevelUpNivel(current)) {
+				ui.notifications.warn(game.i18n.localize("op.progressMaxReached"));
+				return;
+			}
+			const next = getNextNivelValue(current);
+			await this.actor.update({ "system.nivel.value": next });
+			ui.notifications.info(game.i18n.format("op.levelUpNivelMessage", { value: next }));
+			return;
+		}
+
+		const current = Number(sys.NEX?.value) || 0;
+		if (!canLevelUpNex(current)) {
+			ui.notifications.warn(game.i18n.format("op.nexMaxReached", { max: NEX_MAX }));
+			return;
+		}
+		const next = getNextNexValue(current);
+		await this.actor.update({ "system.NEX.value": next });
+		ui.notifications.info(game.i18n.format("op.levelUpNexMessage", { value: next }));
+	}
+
+	static async #onRemoveWeaponEnchantment(event, target) {
+		event.preventDefault();
+		event.stopPropagation();
+		const itemId = target.closest(".item")?.dataset.itemId;
+		const enchantId = target.closest("[data-enchant-id]")?.dataset.enchantId;
+		const item = itemId ? this.actor.items.get(itemId) : null;
+		if (!item || !enchantId) return;
+
+		const enchantment = (item.system.enchantments ?? []).find((e) => e.id === enchantId);
+		const confirmed = await Dialog.confirm({
+			title: game.i18n.localize("op.removeWeaponEnchantmentTitle"),
+			content: `<p>${game.i18n.format("op.removeWeaponEnchantmentConfirm", {
+				weapon: item.name,
+				enchant: enchantment?.ritualName ?? "",
+				tier: enchantment?.tierLabel ?? "",
+			})}</p>`,
+		});
+		if (!confirmed) return;
+
+		await removeEnchantmentFromWeapon(item, enchantId);
+		ui.notifications.info(
+			game.i18n.format("op.removeWeaponEnchantmentDone", {
+				enchant: enchantment?.ritualName ?? "",
+				weapon: item.name,
+			})
+		);
+	}
+
+	static async #onToggleWeaponMod(event, target) {
+		event.preventDefault();
+		const itemId = target.closest(".item")?.dataset.itemId;
+		const item = itemId ? this.actor.items.get(itemId) : null;
+		if (!item || !itemModifiesWeapons(item)) return;
+		const active = Boolean(item.system.using?.state);
+		await item.update({
+			"system.using": { state: !active, class: !active ? "fas" : "far" },
+		});
 	}
 
 	/**
@@ -867,6 +1338,15 @@ export class OrdemActorSheet extends api.HandlebarsApplicationMixin(sheets.Actor
 		event.preventDefault();
 		const skill = target.closest("[data-key]").dataset.key;
 		return this.actor.rollSkill({ skill, event });
+	}
+
+	static async #onDiceModChange(event, target) {
+		event.preventDefault();
+		const skillKey = target.dataset.skill;
+		const isIncrement = target.dataset.action === "diceModIncrement";
+		const current = Number(this.actor.system.skills?.[skillKey]?.diceMod) || 0;
+		const newVal = isIncrement ? current + 1 : current - 1;
+		await this.actor.update({ [`system.skills.${skillKey}.diceMod`]: newVal });
 	}
 
 	/* -------------------------------------------- */

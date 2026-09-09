@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-zerar-entropia">
+<stop offset="0%" stop-color="#2a2a2a" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-zerar-entropia)"/>
+<circle cx="256" cy="256" r="190" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.2"/>
+			<circle cx="256" cy="256" r="150" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.35"/>
+			<circle cx="256" cy="256" r="110" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.5"/>
+<g transform="translate(0,0)" opacity="1">
+<rect x="200" y="200" width="112" height="112" rx="8" fill="none" stroke="#ffffff" stroke-width="12"/>
+		 <path d="M230 256 H282 M256 230 V282" stroke="#ffffff" stroke-width="10"/>
+</g>
+</svg>

@@ -618,7 +618,10 @@
 			"skillResis": "",
 			"targetQtd": "",
 			"studentForm": false,
-			"trueForm": false
+			"trueForm": false,
+			"basePeCost": 0,
+			"tiers": [],
+			"rolls": []
 		},
 		"ability": {
 			"id": 0,

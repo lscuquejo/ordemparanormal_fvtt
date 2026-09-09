@@ -1,0 +1,16 @@
+{{#if conditionDisplay.hasAny}}
+	<div class="active-conditions">
+		<div class="active-conditions-label">{{localize "op.activeConditions"}}</div>
+		{{#each conditionDisplay.conditions as |cond|}}
+			<div class="active-condition" data-status-id="{{cond.id}}" title="{{cond.description}}">
+				<span class="active-condition-name">{{cond.name}}.</span>
+				{{#if cond.description}}
+					<span class="active-condition-desc">{{cond.description}}</span>
+				{{/if}}
+				{{#if cond.reduced}}
+					<span class="active-condition-reduced">({{cond.reduced}})</span>
+				{{/if}}
+			</div>
+		{{/each}}
+	</div>
+{{/if}}

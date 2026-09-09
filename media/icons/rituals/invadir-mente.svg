@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-invadir-mente">
+<stop offset="0%" stop-color="#d4af37" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-invadir-mente)"/>
+
+<g transform="translate(0,0)" opacity="1">
+<ellipse cx="256" cy="240" rx="90" ry="70" fill="#ffd700" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round" paint-order="stroke fill" opacity="0.6"/>
+		 <path d="M180 240 L120 240 M332 240 L392 240" stroke="#ffd700" stroke-width="12"/>
+		 <path d="M120 240 L100 220 L100 260 Z M392 240 L412 220 L412 260 Z" fill="#ffd700" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round" paint-order="stroke fill"/>
+</g>
+</svg>

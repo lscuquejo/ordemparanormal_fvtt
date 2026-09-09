@@ -1,14 +1,36 @@
-node_modules
-.env
+node_modules/
+dist/
+.cache/
 
-# PACKS
+# Secrets & credentials — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+id_rsa*
+id_ed25519*
+id_ecdsa*
+credentials.json
+**/secrets/**
+.foundry/
+foundryconfig.json
+.npmrc
+.netrc
+
+# PACKS (LevelDB binaries) — keep JSON sources
 packs/*
 !packs/_source/
 
-# FORMATS
+# FORMATS / local tooling
 *.map
 .agents/
 .claude/
 skills-lock.json
 *.rar
 *.txt
+!LICENSE.txt
+!README.txt

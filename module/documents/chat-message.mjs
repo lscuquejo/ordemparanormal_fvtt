@@ -1,12 +1,52 @@
 import { getReactionEligibility } from "../helpers/reaction-helpers.mjs";
 import { dispatchReaction, pickCounterAttackWeapon } from "../helpers/reactions.mjs";
+import {
+	allResistancesResolved,
+	canUserRollResistance,
+	getResistanceResult,
+	ritualNeedsResistance,
+} from "../helpers/ritual-resistance.mjs";
 import { damageRecipients, isAttackParticipant, shouldShowDefenseValue } from "../helpers/visibility.mjs";
+import { OrdemItem } from "./item.mjs";
 
 /**
  * Wrapper sobre `damageRecipients` que injeta `game.users` atual.
  */
 function _damageRecipients(targetActor) {
 	return damageRecipients(targetActor, game.users ?? []);
+}
+
+/**
+ * @param {object|null|undefined} damageTarget
+ * @returns {{ resistanceMessage: ChatMessage|null, pending: boolean, resolved: boolean }}
+ */
+/**
+ * Re-render a chat message in the log (v13 expects the document, not the id).
+ * @param {ChatMessage|string|null|undefined} messageOrId
+ */
+export async function refreshChatMessage(messageOrId) {
+	const message = typeof messageOrId === "string" ? game.messages.get(messageOrId) : messageOrId;
+	if (!message?.id || !ui.chat?.updateMessage) return;
+	await ui.chat.updateMessage(message);
+}
+
+function _ritualDamageResistanceState(damageTarget) {
+	if (!damageTarget?.awaitingResistance) {
+		return { resistanceMessage: null, pending: false, resolved: true };
+	}
+
+	const resistanceMessage = damageTarget.resistanceMessageId
+		? game.messages.get(damageTarget.resistanceMessageId)
+		: null;
+	if (!resistanceMessage) {
+		return { resistanceMessage: null, pending: true, resolved: false };
+	}
+
+	const pending = resistanceMessage.getFlag("ordemparanormal", "ritualResistancePending");
+	const targetUuids = pending?.targetUuids ?? damageTarget.actorUuids ?? [];
+	const resistanceResults = resistanceMessage.getFlag("ordemparanormal", "resistanceResults");
+	const resolved = allResistancesResolved(targetUuids, resistanceResults);
+	return { resistanceMessage, pending: !resolved, resolved };
 }
 
 /** */
@@ -22,13 +62,14 @@ export default class ChatMessageOP extends ChatMessage {
 	 * @param {HTMLElement} html    Rendered chat message HTML (v13 — native DOM, no jQuery)
 	 * @param {object} data         Data passed to the render context
 	 */
-	async getHTML(options = {}) {
+	/** @inheritDoc */
+	async renderHTML(options = {}) {
 		const html = await super.renderHTML(options);
 		if (foundry.utils.getType(this.system?.getHTML) === "function") {
 			await this.system.getHTML(html, options);
-			return html;
 		}
 
+		// v13 roll messages always have system.getHTML — must still inject apply/resistance UI.
 		this._displayChatActionButtons(html);
 		this._highlightCriticalSuccessFailure(html);
 		// this._enrichChatCard(html);
@@ -45,12 +86,158 @@ export default class ChatMessageOP extends ChatMessage {
 		return html;
 	}
 
+	/** @deprecated Foundry v13 prefers renderHTML; kept for callers/tests. */
+	async getHTML(options = {}) {
+		return this.renderHTML(options);
+	}
+
 	/* -------------------------------------------- */
 
 	/**
 	 * Listen for shift key being pressed to show the chat message "delete" icon, or released (or focus lost) to hide it.
 	 */
 	static activateListeners() {}
+
+	/**
+	 * Resistance rolls must happen before ritual damage/effects are applied.
+	 * @param {HTMLElement} html
+	 */
+	_injectRitualResistancePanel(html) {
+		const resistancePending = this.getFlag("ordemparanormal", "ritualResistancePending");
+		const effectPending = this.getFlag("ordemparanormal", "ritualEffectPending");
+		const context = resistancePending ?? effectPending;
+		if (!context) return;
+
+		const needsResistance = ritualNeedsResistance(context.resistanceSpec);
+		if (!needsResistance && !resistancePending) return;
+
+		const targetUuids = context.targetUuids ?? context.actorUuids ?? [];
+		if (!targetUuids.length) return;
+
+		const resistanceResults = this.getFlag("ordemparanormal", "resistanceResults");
+		html.querySelector(".ritual-resistance-panel")?.remove();
+		html.querySelector(".ritual-apply-damage")?.remove();
+		html.querySelector(".ritual-apply-effect")?.remove();
+
+		const anchor = html.querySelector(".dice-roll") ?? html.querySelector(".message-content") ?? html;
+		if (!anchor) return;
+
+		const panel = document.createElement("div");
+		panel.className = "ritual-resistance-panel card-buttons flexrow";
+
+		if (needsResistance) {
+			const heading = document.createElement("p");
+			heading.className = "ritual-resistance-heading";
+			heading.innerHTML = `<strong>${game.i18n.format("op.ritualResistanceHeading", {
+				skill: context.resistanceSpec.label,
+				dt: context.ritualDT ?? 0,
+			})}</strong>`;
+			panel.append(heading);
+		}
+
+		if (needsResistance) {
+			for (const actorUuid of targetUuids) {
+				const row = document.createElement("div");
+				row.className = "ritual-resistance-row flexrow flex-between";
+
+				const actor = foundry.utils.fromUuidSync(actorUuid);
+				const name = document.createElement("span");
+				name.textContent = actor?.name ?? actorUuid;
+				row.append(name);
+
+				const existing = getResistanceResult(resistanceResults, actorUuid);
+				if (existing) {
+					const status = document.createElement("span");
+					status.className = existing.passed ? "resistance-pass" : "resistance-fail";
+					status.textContent = game.i18n.format(
+						existing.passed ? "op.ritualResistanceResultPass" : "op.ritualResistanceResultFail",
+						{ total: existing.total, dt: context.ritualDT ?? 0 }
+					);
+					row.append(status);
+				} else if (actor && canUserRollResistance(game.user, actor)) {
+					const btn = document.createElement("button");
+					btn.type = "button";
+					btn.dataset.action = "ritualResistance";
+					btn.dataset.actorUuid = actorUuid;
+					btn.innerHTML = `<i class="fa-solid fa-dice-d20"></i> ${game.i18n.format("op.ritualResistanceRollBtn", {
+						skill: context.resistanceSpec.label,
+					})}`;
+					row.append(btn);
+				} else {
+					const wait = document.createElement("span");
+					wait.className = "resistance-waiting";
+					wait.textContent = game.i18n.localize("op.ritualResistanceWaiting");
+					row.append(wait);
+				}
+
+				panel.append(row);
+			}
+
+			anchor.after(panel);
+		}
+
+		if (!game.user.isGM) return;
+
+		const messageRef = this;
+		const pendingResistance = !allResistancesResolved(targetUuids, resistanceResults);
+
+		if (resistancePending) {
+			const damageApplied = this.getFlag("ordemparanormal", "ritualDamageApplied");
+			const applyDamageBtn = document.createElement("button");
+			applyDamageBtn.type = "button";
+			applyDamageBtn.className = "ritual-apply-damage";
+			applyDamageBtn.innerHTML = `<i class="fa-solid fa-heart-crack"></i> ${game.i18n.localize("op.applyDamage")}`;
+			if (damageApplied) {
+				applyDamageBtn.disabled = true;
+				applyDamageBtn.classList.add("damage-applied");
+				applyDamageBtn.title = game.i18n.localize("op.damageAlreadyApplied");
+			} else if (pendingResistance) {
+				applyDamageBtn.disabled = true;
+				applyDamageBtn.title = game.i18n.localize("op.ritualResistancePending");
+			}
+			applyDamageBtn.addEventListener("click", async (event) => {
+				event.preventDefault();
+				if (messageRef.getFlag("ordemparanormal", "ritualDamageApplied")) return;
+				applyDamageBtn.disabled = true;
+				try {
+					await OrdemItem.applyDamageFromMessage(messageRef);
+					applyDamageBtn.classList.add("damage-applied");
+					applyDamageBtn.title = game.i18n.localize("op.damageAlreadyApplied");
+				} finally {
+					if (!messageRef.getFlag("ordemparanormal", "ritualDamageApplied")) {
+						applyDamageBtn.disabled = false;
+					}
+				}
+			});
+			(needsResistance ? panel : anchor).after(applyDamageBtn);
+		}
+
+		if (effectPending) {
+			const effectApplied = this.getFlag("ordemparanormal", "ritualEffectApplied");
+			const applyEffectBtn = document.createElement("button");
+			applyEffectBtn.type = "button";
+			applyEffectBtn.className = "ritual-apply-effect";
+			applyEffectBtn.innerHTML = `<i class="fa-solid fa-sparkles"></i> ${game.i18n.localize("op.applyRitualEffect")}`;
+			if (effectApplied || pendingResistance) {
+				applyEffectBtn.disabled = true;
+				applyEffectBtn.title = effectApplied
+					? game.i18n.localize("op.ritualEffectAlreadyApplied")
+					: game.i18n.localize("op.ritualResistancePending");
+			}
+			applyEffectBtn.addEventListener("click", async (event) => {
+				event.preventDefault();
+				applyEffectBtn.disabled = true;
+				try {
+					await OrdemItem.applyRitualEffectFromMessage(messageRef);
+				} finally {
+					if (!messageRef.getFlag("ordemparanormal", "ritualEffectApplied")) {
+						applyEffectBtn.disabled = false;
+					}
+				}
+			});
+			(needsResistance ? panel : anchor).after(applyEffectBtn);
+		}
+	}
 
 	/* -------------------------------------------- */
 
@@ -100,37 +287,28 @@ export default class ChatMessageOP extends ChatMessage {
 				}
 			}
 
-			// Disable the damage button when the last attack missed — and also while a
-			// defender reaction is still pending (revealed === false). Otherwise the
-			// attacker/GM could roll and apply damage before the defender's Dodge
-			// flips the attack into a miss, leaving stolen PV behind.
-			//
-			// Multi-attack volleys gravam `attackResults` (entrada por ataque). Aqui
-			// agregamos a decisão: o botão libera assim que houver ao menos um hit
-			// já revelado E nenhum ataque ainda pendente de reação. Sem essa
-			// agregação, um único miss subsequente bloqueava o dano de um hit
-			// anterior na mesma volley.
+			// Disable the damage button only while a defender reaction is still pending
+			// (revealed === false). Misses still allow damage rolls — splash, GM
+			// discretion, or post-reaction application.
 			const cardHitResult = this.getFlag("ordemparanormal", "hitResult");
 			if (cardHitResult) {
 				const damageButton = html.querySelector('[data-action="damage"]');
 				if (damageButton) {
-					let disableForMiss = false;
 					let pending = false;
 					let hasCritical = false;
 					if (cardHitResult.attackResults?.length) {
 						pending = cardHitResult.attackResults.some((a) => a.revealed === false);
-						const anyRevealedHit = cardHitResult.attackResults.some((a) => a.hit === true && a.revealed !== false);
-						disableForMiss = !anyRevealedHit && !pending;
-						hasCritical = cardHitResult.attackResults.some((a) => a.isCritical === true && a.revealed !== false);
+						hasCritical = cardHitResult.attackResults.some(
+							(a) => a.isCritical === true && a.hit === true && a.revealed !== false
+						);
 					} else {
 						pending = cardHitResult.revealed === false;
-						disableForMiss = cardHitResult.hit === false;
-						hasCritical = cardHitResult.isCritical === true;
+						hasCritical = cardHitResult.isCritical === true && cardHitResult.hit === true;
 					}
-					if (disableForMiss || pending) {
+					if (pending) {
 						damageButton.disabled = true;
 						damageButton.classList.add("hit-miss");
-						damageButton.title = game.i18n.localize("op.rollDmgDisabled");
+						damageButton.title = game.i18n.localize("op.rollDmgPending");
 					}
 					if (hasCritical) {
 						damageButton.classList.add("hit-critical");
@@ -138,6 +316,8 @@ export default class ChatMessageOP extends ChatMessage {
 				}
 			}
 		}
+
+		this._injectRitualResistancePanel(html);
 
 		// Inject "Aplicar ao Alvo" button on damage roll messages that have a damageTarget flag.
 		//
@@ -148,55 +328,98 @@ export default class ChatMessageOP extends ChatMessage {
 		// local é só feedback visual durante o async — não sobrevive ao re-render.
 		const damageTarget = this.getFlag("ordemparanormal", "damageTarget");
 		const damageApplied = this.getFlag("ordemparanormal", "damageApplied");
-		if (damageTarget && game.user.isGM) {
+		const ritualResistance = _ritualDamageResistanceState(damageTarget);
+		const canApplyDamage = !damageTarget?.awaitingResistance || (damageTarget?.ritualRoll && ritualResistance.resolved);
+
+		if (damageTarget && game.user.isGM && canApplyDamage) {
 			const rollContent = html.querySelector(".dice-roll");
 			if (rollContent) {
+				html.querySelectorAll(".op-apply-damage-btn").forEach((el) => el.remove());
 				const applyBtn = document.createElement("button");
+				applyBtn.className = "op-apply-damage-btn";
 				applyBtn.innerHTML = `<i class="fa-solid fa-heart-crack"></i> ${game.i18n.localize("op.applyDamage")}`;
 				if (damageApplied) {
 					applyBtn.disabled = true;
 					applyBtn.classList.add("damage-applied");
 					applyBtn.title = game.i18n.localize("op.damageAlreadyApplied");
+				} else if (ritualResistance.pending) {
+					applyBtn.disabled = true;
+					applyBtn.title = game.i18n.localize("op.ritualResistancePending");
 				}
 				const messageRef = this;
 				applyBtn.addEventListener("click", async (event) => {
 					event.preventDefault();
-					if (messageRef.getFlag("ordemparanormal", "damageApplied")) return; // double-click race
+					if (messageRef.getFlag("ordemparanormal", "damageApplied")) return;
 					applyBtn.disabled = true;
 					try {
-						const targetActor = await fromUuid(damageTarget.actorUuid);
-						if (!targetActor) return;
-						const applyRoll = messageRef.rolls?.[0];
-						if (!applyRoll) return;
-						const attackMsg = damageTarget.attackMessageId ? game.messages.get(damageTarget.attackMessageId) : null;
-						const extraRD = attackMsg?.getFlag("ordemparanormal", "damageBlock")?.amount ?? 0;
-						const result = await targetActor.applyDamage(applyRoll.total, {
-							damageType: damageTarget.damageType,
-							extraRD,
-						});
-						const blockedMsg =
-							result.blocked > 0 ? ` (${game.i18n.format("op.damageBlocked", { blocked: result.blocked })})` : "";
-						ChatMessage.create({
-							content: game.i18n.format("op.applyDamageResult", {
+						if (damageTarget.actorUuids?.length || damageTarget.ritualRoll) {
+							await OrdemItem.applyDamageFromMessage(messageRef);
+						} else {
+							const targetActor = await fromUuid(damageTarget.actorUuid);
+							if (!targetActor) return;
+							const applyRoll = messageRef.rolls?.[0];
+							if (!applyRoll) return;
+							const attackMsg = damageTarget.attackMessageId ? game.messages.get(damageTarget.attackMessageId) : null;
+							const extraRD = attackMsg?.getFlag("ordemparanormal", "damageBlock")?.amount ?? 0;
+							const result = await targetActor.applyDamage(applyRoll.total, {
+								damageType: damageTarget.damageType,
+								extraRD,
+							});
+							const blockedMsg =
+								result.blocked > 0 ? ` (${game.i18n.format("op.damageBlocked", { blocked: result.blocked })})` : "";
+							ChatMessage.create({
+								content: game.i18n.format("op.applyDamageResult", {
+									amount: result.finalDamage,
+									target: targetActor.name,
+									blocked: blockedMsg,
+								}),
+								whisper: _damageRecipients(targetActor),
+							});
+							await messageRef.setFlag("ordemparanormal", "damageApplied", {
+								at: Date.now(),
+								by: game.user.id,
 								amount: result.finalDamage,
-								target: targetActor.name,
-								blocked: blockedMsg,
-							}),
-							whisper: _damageRecipients(targetActor),
-						});
-						// Marcar como aplicado para que re-renders mantenham o botão desabilitado
-						// (idempotência persistente, sobrevive a reload/reabertura do chat).
-						await messageRef.setFlag("ordemparanormal", "damageApplied", {
-							at: Date.now(),
-							by: game.user.id,
-							amount: result.finalDamage,
-							targetUuid: damageTarget.actorUuid,
-						});
+								targetUuid: damageTarget.actorUuid,
+							});
+						}
 						applyBtn.classList.add("damage-applied");
 						applyBtn.title = game.i18n.localize("op.damageAlreadyApplied");
 					} finally {
-						// Não re-habilita se já foi aplicado.
 						if (!messageRef.getFlag("ordemparanormal", "damageApplied")) {
+							applyBtn.disabled = false;
+						}
+					}
+				});
+				rollContent.after(applyBtn);
+			}
+		}
+
+		const healTarget = this.getFlag("ordemparanormal", "healTarget");
+		const healApplied = this.getFlag("ordemparanormal", "healApplied");
+		const healButtonKind = healTarget?.kind === "pv_temporarios" ? "pv_temporarios" : "cura";
+		if (["cura", "pv_temporarios"].includes(healTarget?.kind) && game.user.isGM) {
+			const rollContent = html.querySelector(".dice-roll");
+			if (rollContent) {
+				const applyBtn = document.createElement("button");
+				const labelKey = healButtonKind === "pv_temporarios" ? "op.applyTemporaryHP" : "op.applyHealing";
+				const iconClass = healButtonKind === "pv_temporarios" ? "fa-shield-heart" : "fa-heart";
+				applyBtn.innerHTML = `<i class="fa-solid ${iconClass}"></i> ${game.i18n.localize(labelKey)}`;
+				if (healApplied) {
+					applyBtn.disabled = true;
+					applyBtn.classList.add("heal-applied");
+					applyBtn.title = game.i18n.localize("op.healingAlreadyApplied");
+				}
+				const messageRef = this;
+				applyBtn.addEventListener("click", async (event) => {
+					event.preventDefault();
+					if (messageRef.getFlag("ordemparanormal", "healApplied")) return;
+					applyBtn.disabled = true;
+					try {
+						await OrdemItem.applyHealingFromMessage(messageRef);
+						applyBtn.classList.add("heal-applied");
+						applyBtn.title = game.i18n.localize("op.healingAlreadyApplied");
+					} finally {
+						if (!messageRef.getFlag("ordemparanormal", "healApplied")) {
 							applyBtn.disabled = false;
 						}
 					}

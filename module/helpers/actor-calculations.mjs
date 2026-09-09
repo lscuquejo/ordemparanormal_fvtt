@@ -27,11 +27,73 @@ export function calculateSkillProficiency(degreeLabel) {
  * @param {number} stageValue
  * @returns {number}
  */
+export const NEX_STEP = 5;
+export const NEX_MAX = 99;
+export const NIVEL_MAX = 20;
+export const STAGE_MAX = 5;
+
 export function calculateProgress(isSurvivor, rule, nexValue, nivelValue, stageValue) {
 	if (isSurvivor) return stageValue;
 	if (rule === 1) return nexValue < 99 ? Math.floor(nexValue / 5) : 20;
 	if (rule === 2) return nivelValue;
 	return 0;
+}
+
+/**
+ * Next NEX value on level up: 0 → 5 → 10 → … → 99.
+ * @param {number} current
+ * @returns {number}
+ */
+export function getNextNexValue(current) {
+	const val = Number(current) || 0;
+	if (val >= NEX_MAX) return NEX_MAX;
+	return Math.min(NEX_MAX, Math.floor(val / NEX_STEP) * NEX_STEP + NEX_STEP);
+}
+
+/**
+ * @param {number} current
+ * @returns {boolean}
+ */
+export function canLevelUpNex(current) {
+	return (Number(current) || 0) < NEX_MAX;
+}
+
+/**
+ * @param {number} current
+ * @param {number} [max=NIVEL_MAX]
+ * @returns {number}
+ */
+export function getNextNivelValue(current, max = NIVEL_MAX) {
+	const val = Number(current) || 0;
+	return Math.min(max, val + 1);
+}
+
+/**
+ * @param {number} current
+ * @param {number} [max=NIVEL_MAX]
+ * @returns {boolean}
+ */
+export function canLevelUpNivel(current, max = NIVEL_MAX) {
+	return (Number(current) || 0) < max;
+}
+
+/**
+ * @param {number} current
+ * @param {number} [max=STAGE_MAX]
+ * @returns {number}
+ */
+export function getNextStageValue(current, max = STAGE_MAX) {
+	const val = Number(current) || 0;
+	return Math.min(max, val + 1);
+}
+
+/**
+ * @param {number} current
+ * @param {number} [max=STAGE_MAX]
+ * @returns {boolean}
+ */
+export function canLevelUpStage(current, max = STAGE_MAX) {
+	return (Number(current) || 0) < max;
 }
 
 /**
@@ -212,4 +274,28 @@ export function calculateSpaces(weight, FOR, bonus = { value: 0, max: 0 }) {
 	}
 
 	return { value, max, pct, over, pctMax, isOverweight, isDoubleOverweight };
+}
+
+/**
+ * @param {object|null|undefined} overrides
+ * @returns {boolean}
+ */
+export function hasManualOverrides(overrides) {
+	if (!overrides) return false;
+	return [
+		overrides.PVMax,
+		overrides.SANMax,
+		overrides.PEMax,
+		overrides.PDMax,
+		overrides.PEPerRound,
+		overrides.PDPerRound,
+		overrides.defense,
+		overrides.dodge,
+		overrides.desloc,
+		overrides.patentName,
+		overrides.itemLimit1,
+		overrides.itemLimit2,
+		overrides.itemLimit3,
+		overrides.itemLimit4,
+	].some((value) => value !== null && value !== undefined && value !== "");
 }

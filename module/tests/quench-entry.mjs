@@ -21,3 +21,6 @@ import "./suites/sheets.test.mjs";
 import "./suites/reactions.test.mjs";
 import "./suites/combat-qol-coverage.test.mjs";
 import "./suites/agent-skill-defaults.test.mjs";
+import "./suites/ritual-effects.test.mjs";
+import "./suites/aprimorar-rituals.test.mjs";
+import "./suites/circle1-rituals.test.mjs";

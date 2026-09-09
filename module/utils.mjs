@@ -63,6 +63,7 @@ export async function preloadHandlebarsTemplates() {
 		"systems/ordemparanormal/templates/actor/parts/actor-inventory.hbs",
 		"systems/ordemparanormal/templates/actor/parts/actor-rituals.hbs",
 		"systems/ordemparanormal/templates/actor/parts/actor-skills.hbs",
+		"systems/ordemparanormal/templates/actor/parts/actor-conditions.hbs",
 
 		// Chat Message Partials
 		"systems/ordemparanormal/templates/chat/item-card.hbs",

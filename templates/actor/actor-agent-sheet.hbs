@@ -15,35 +15,122 @@
 				<h1 class="charname">
 					<input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'op.agentNamePlaceholder'}}" />
 				</h1>
+				<div class="resource age-box flex-group-center">
+					<label class="resource-label" for="system.age">{{localize "op.age"}}</label>
+					<div class="resource-content">
+						<input type="number" name="system.age" value="{{system.age}}" min="0" step="1" data-dtype="Number" />
+					</div>
+				</div>
+
+				<div class="sheet-mode-buttons">
+					<button
+						type="button"
+						class="unlock-fields-btn {{#if system.fieldsUnlocked}}is-active{{/if}}"
+						data-action="enableManualEdit"
+						title="{{localize 'op.manualEditTooltip'}}"
+					>
+						<i class="fas {{#if system.fieldsUnlocked}}fa-lock{{else}}fa-unlock{{/if}}"></i>
+						<span>{{#if system.fieldsUnlocked}}{{localize "op.manualEditLock"}}{{else}}{{localize "op.manualEdit"}}{{/if}}</span>
+					</button>
+					<button
+						type="button"
+						class="unlock-fields-btn restore-auto-btn {{#unless system.disableCalculations}}is-active{{/unless}}"
+						data-action="restoreAutomation"
+						title="{{localize 'op.restoreAutomationTooltip'}}"
+					>
+						<i class="fas fa-calculator"></i>
+						<span>{{localize "op.restoreAutomation"}}</span>
+					</button>
+				</div>
 
 				<div class="progress-group flexrow">
 					{{#if isSurvivor}}
 						<div class="resource flex-group-center progress">
-							<label for="system.stage.value" class="resource-label"> {{localize "op.stage"}} </label>
-							<div class="resource-content">
-								{{numberInputFVTT system.stage.value name="system.stage.value" step=1 min=0 max=5}}
+							<label class="resource-label">{{localize "op.stage"}}</label>
+							<div class="resource-content level-up-control">
+								{{#if system.fieldsUnlocked}}
+									{{numberInputFVTT system.stage.value name="system.stage.value" step=1 min=0 max=5}}
+								{{else}}
+									<span class="progress-value">{{progressControl.stage.display}}</span>
+									<button
+										type="button"
+										class="level-up-btn"
+										data-action="levelUpProgress"
+										data-progress-field="stage"
+										title="{{localize 'op.levelUp'}}"
+										{{#unless progressControl.stage.canLevelUp}}disabled{{/unless}}
+									>
+										<i class="fas fa-chevron-up"></i>
+										<span>{{localize "op.levelUp"}}</span>
+									</button>
+								{{/if}}
 							</div>
 						</div>
 					{{else}}
 						{{#if progressRuleIsNEX}}
 							<div class="resource flex-group-center progress">
-								<label for="system.NEX.value" class="resource-label"> {{localize "op.NEX"}} </label>
-								<div class="resource-content">
-									{{numberInputFVTT system.NEX.value name="system.NEX.value" step=1 min=0 max=99}}
+								<label class="resource-label">{{localize "op.NEX"}}</label>
+								<div class="resource-content level-up-control">
+									{{#if system.fieldsUnlocked}}
+										{{numberInputFVTT system.NEX.value name="system.NEX.value" step=5 min=0 max=99}}
+									{{else}}
+										<span class="progress-value">{{progressControl.nex.display}}</span>
+										<button
+											type="button"
+											class="level-up-btn"
+											data-action="levelUpProgress"
+											data-progress-field="nex"
+											title="{{localize 'op.levelUpNexHint'}}"
+											{{#unless progressControl.nex.canLevelUp}}disabled{{/unless}}
+										>
+											<i class="fas fa-chevron-up"></i>
+											<span>{{localize "op.levelUp"}}</span>
+										</button>
+									{{/if}}
 								</div>
 							</div>
 						{{/if}}
 						{{#if progressRuleIsNivel}}
 							<div class="resource flex-group-center progress">
-								<label for="system.nivel.value" class="resource-label"> {{localize "op.nivel"}} </label>
-								<div class="resource-content">
-									{{numberInputFVTT system.nivel.value name="system.nivel.value" step=1 min=0 max=20}}
+								<label class="resource-label">{{localize "op.nivel"}}</label>
+								<div class="resource-content level-up-control">
+									{{#if system.fieldsUnlocked}}
+										{{numberInputFVTT system.nivel.value name="system.nivel.value" step=1 min=0 max=20}}
+									{{else}}
+										<span class="progress-value">{{progressControl.nivel.display}}</span>
+										<button
+											type="button"
+											class="level-up-btn"
+											data-action="levelUpProgress"
+											data-progress-field="nivel"
+											title="{{localize 'op.levelUp'}}"
+											{{#unless progressControl.nivel.canLevelUp}}disabled{{/unless}}
+										>
+											<i class="fas fa-chevron-up"></i>
+											<span>{{localize "op.levelUp"}}</span>
+										</button>
+									{{/if}}
 								</div>
 							</div>
 							<div class="resource flex-group-center progress">
-								<label for="system.NEX.value" class="resource-label"> {{localize "op.NEX"}} </label>
-								<div class="resource-content">
-									{{numberInputFVTT system.NEX.value name="system.NEX.value" step=1 min=0 max=99}}
+								<label class="resource-label">{{localize "op.NEX"}}</label>
+								<div class="resource-content level-up-control">
+									{{#if system.fieldsUnlocked}}
+										{{numberInputFVTT system.NEX.value name="system.NEX.value" step=5 min=0 max=99}}
+									{{else}}
+										<span class="progress-value">{{progressControl.nex.display}}</span>
+										<button
+											type="button"
+											class="level-up-btn"
+											data-action="levelUpProgress"
+											data-progress-field="nex"
+											title="{{localize 'op.levelUpNexHint'}}"
+											{{#unless progressControl.nex.canLevelUp}}disabled{{/unless}}
+										>
+											<i class="fas fa-chevron-up"></i>
+											<span>{{localize "op.levelUp"}}</span>
+										</button>
+									{{/if}}
 								</div>
 							</div>
 						{{/if}}
@@ -148,36 +235,44 @@
 					<label for="system.PV.value" class="resource-label"> {{localize "op.PV"}} </label>
 					<div class="resource-content flexrow flex-center flex-between">
 						<input type="text" name="system.PV.value" value="{{system.PV.value}}" data-dtype="Number" />
+						{{#if resourceTemps.PV}}<span class="resource-temp">{{resourceTemps.PV}}</span>{{/if}}
 						<span> / </span>
 						<input
 							type="text"
 							name="system.PV.max"
 							value="{{system.PV.max}}"
 							data-dtype="Number"
-							{{disabled system.isDerivatedCalcsActive}}
+							{{disabled lockDerivedFields}}
 						/>
 					</div>
 				</div>
 
 				{{#if usingWithoutSanityRule}}
-					<div class="resource flex-group-center">
-						<label for="system.PD.value" class="resource-label">{{localize "op.PD"}} </label>
+					<div class="resource flex-group-center {{#if conditionDisplay.peCost.affected}}condition-affected{{/if}}">
+						<label for="system.PD.value" class="resource-label {{#if conditionDisplay.peCost.affected}}condition-affected{{/if}}">{{localize "op.PD"}} {{opConditionPenalty conditionDisplay "peCost"}}</label>
 						<div class="resource-content flexrow flex-center flex-between">
 							<input type="text" name="system.PD.value" value="{{system.PD.value}}" data-dtype="Number" />
+							{{#if resourceTemps.PD}}<span class="resource-temp">{{resourceTemps.PD}}</span>{{/if}}
 							<span> / </span>
 							<input
 								type="text"
 								name="system.PD.max"
 								value="{{system.PD.max}}"
 								data-dtype="Number"
-								{{disabled system.isDerivatedCalcsActive}}
+								{{disabled lockDerivedFields}}
 							/>
 						</div>
 					</div>
 					<div class="resource flex-group-center pe-pd-perRound-resource">
 						<label for="system.PD.perRound" class="resource-label">{{localize "op.pdPerRound"}} </label>
 						<div class="resource-content flexrow flex-center flex-between">
-							<input type="number" name="system.PD.perRound" value="{{system.PD.perRound}}" data-dtype="Number" disabled />
+							<input
+								type="number"
+								name="system.PD.perRound"
+								value="{{system.PD.perRound}}"
+								data-dtype="Number"
+								{{disabled lockDerivedFields}}
+							/>
 						</div>
 					</div>
 				{{else}}
@@ -185,27 +280,29 @@
 						<label for="system.SAN.value" class="resource-label">{{localize "op.San"}} </label>
 						<div class="resource-content flexrow flex-center flex-between">
 							<input type="text" name="system.SAN.value" value="{{system.SAN.value}}" data-dtype="Number" />
+							{{#if resourceTemps.SAN}}<span class="resource-temp">{{resourceTemps.SAN}}</span>{{/if}}
 							<span> / </span>
 							<input
 								type="text"
 								name="system.SAN.max"
 								value="{{system.SAN.max}}"
 								data-dtype="Number"
-								{{disabled system.isDerivatedCalcsActive}}
+								{{disabled lockDerivedFields}}
 							/>
 						</div>
 					</div>
-					<div class="resource flex-group-center">
-						<label for="system.PE.value" class="resource-label">{{localize "op.PE"}} </label>
+					<div class="resource flex-group-center {{#if conditionDisplay.peCost.affected}}condition-affected{{/if}}">
+						<label for="system.PE.value" class="resource-label {{#if conditionDisplay.peCost.affected}}condition-affected{{/if}}">{{localize "op.PE"}} {{opConditionPenalty conditionDisplay "peCost"}}</label>
 						<div class="resource-content flexrow flex-center flex-between">
 							<input type="text" name="system.PE.value" value="{{system.PE.value}}" data-dtype="Number" />
+							{{#if resourceTemps.PE}}<span class="resource-temp">{{resourceTemps.PE}}</span>{{/if}}
 							<span> / </span>
 							<input
 								type="text"
 								name="system.PE.max"
 								value="{{system.PE.max}}"
 								data-dtype="Number"
-								{{disabled system.isDerivatedCalcsActive}}
+								{{disabled lockDerivedFields}}
 							/>
 						</div>
 					</div>
@@ -217,7 +314,7 @@
 								name="system.PE.perRound"
 								value="{{system.PE.perRound}}"
 								data-dtype="Number"
-								{{disabled system.isDerivatedCalcsActive}}
+								{{disabled lockDerivedFields}}
 							/>
 						</div>
 					</div>
@@ -229,15 +326,15 @@
 	{{! --- Atributos e Defesas --- }}
 	<div class="header-bottom flexcol">
 		<div class="resources flexrow">
-			<div class="resource flex-group-center">
+			<div class="resource flex-group-center {{#if conditionDisplay.attributes.dex.affected}}condition-affected{{/if}}">
 				<label
 					for="system.attributes.dex.value"
-					class="resource-label rollable"
+					class="resource-label rollable {{#if conditionDisplay.attributes.dex.affected}}condition-affected{{/if}}"
 					data-action="onRollAttributeTest"
 					data-rollType="attribute"
 					data-label="{{localize 'op.attDex'}}"
 					data-key="dex"
-				>{{localize "op.attDex"}}</label>
+				>{{localize "op.attDex"}} {{opConditionPenalty conditionDisplay "attributes" "dex"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
 					<input
 						type="text"
@@ -245,17 +342,18 @@
 						value="{{system.attributes.dex.value}}"
 						data-dtype="Number"
 					/>
+					{{#if system.attributes.dex.bonus}}<span class="attr-ritual-bonus">+{{system.attributes.dex.bonus}}</span>{{/if}}
 				</div>
 			</div>
-			<div class="resource flex-group-center">
+			<div class="resource flex-group-center {{#if conditionDisplay.attributes.str.affected}}condition-affected{{/if}}">
 				<label
 					for="system.attributes.str.value"
-					class="resource-label rollable"
+					class="resource-label rollable {{#if conditionDisplay.attributes.str.affected}}condition-affected{{/if}}"
 					data-action="onRollAttributeTest"
 					data-rollType="attribute"
 					data-label="{{localize 'op.attStr'}}"
 					data-key="str"
-				>{{localize "op.attStr"}}</label>
+				>{{localize "op.attStr"}} {{opConditionPenalty conditionDisplay "attributes" "str"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
 					<input
 						type="text"
@@ -263,17 +361,18 @@
 						value="{{system.attributes.str.value}}"
 						data-dtype="Number"
 					/>
+					{{#if system.attributes.str.bonus}}<span class="attr-ritual-bonus">+{{system.attributes.str.bonus}}</span>{{/if}}
 				</div>
 			</div>
-			<div class="resource flex-group-center">
+			<div class="resource flex-group-center {{#if conditionDisplay.attributes.int.affected}}condition-affected{{/if}}">
 				<label
 					for="system.attributes.int.value"
-					class="resource-label rollable"
+					class="resource-label rollable {{#if conditionDisplay.attributes.int.affected}}condition-affected{{/if}}"
 					data-action="onRollAttributeTest"
 					data-rollType="attribute"
 					data-label="{{localize 'op.attInt'}}"
 					data-key="int"
-				>{{localize "op.attInt"}}</label>
+				>{{localize "op.attInt"}} {{opConditionPenalty conditionDisplay "attributes" "int"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
 					<input
 						type="text"
@@ -281,17 +380,18 @@
 						value="{{system.attributes.int.value}}"
 						data-dtype="Number"
 					/>
+					{{#if system.attributes.int.bonus}}<span class="attr-ritual-bonus">+{{system.attributes.int.bonus}}</span>{{/if}}
 				</div>
 			</div>
-			<div class="resource flex-group-center">
+			<div class="resource flex-group-center {{#if conditionDisplay.attributes.pre.affected}}condition-affected{{/if}}">
 				<label
 					for="system.attributes.pre.value"
-					class="resource-label rollable"
+					class="resource-label rollable {{#if conditionDisplay.attributes.pre.affected}}condition-affected{{/if}}"
 					data-action="onRollAttributeTest"
 					data-rollType="attribute"
 					data-label="{{localize 'op.attPre'}}"
 					data-key="pre"
-				>{{localize "op.attPre"}}</label>
+				>{{localize "op.attPre"}} {{opConditionPenalty conditionDisplay "attributes" "pre"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
 					<input
 						type="text"
@@ -299,17 +399,18 @@
 						value="{{system.attributes.pre.value}}"
 						data-dtype="Number"
 					/>
+					{{#if system.attributes.pre.bonus}}<span class="attr-ritual-bonus">+{{system.attributes.pre.bonus}}</span>{{/if}}
 				</div>
 			</div>
-			<div class="resource flex-group-center">
+			<div class="resource flex-group-center {{#if conditionDisplay.attributes.vit.affected}}condition-affected{{/if}}">
 				<label
 					for="system.attributes.vit.value"
-					class="resource-label rollable"
+					class="resource-label rollable {{#if conditionDisplay.attributes.vit.affected}}condition-affected{{/if}}"
 					data-action="onRollAttributeTest"
 					data-rollType="attribute"
 					data-label="{{localize 'op.attVit'}}"
 					data-key="vit"
-				>{{localize "op.attVit"}}</label>
+				>{{localize "op.attVit"}} {{opConditionPenalty conditionDisplay "attributes" "vit"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
 					<input
 						type="text"
@@ -317,29 +418,69 @@
 						value="{{system.attributes.vit.value}}"
 						data-dtype="Number"
 					/>
+					{{#if system.attributes.vit.bonus}}<span class="attr-ritual-bonus">+{{system.attributes.vit.bonus}}</span>{{/if}}
 				</div>
 			</div>
 		</div>
 
-		<div class="resources flexrow">
-			<div class="resource flex-group-center">
-				<label for="{{localize 'op.defense'}}" class="resource-label">{{localize "op.defense"}}</label>
+		<div class="resources flexrow combat-derived-stats">
+			<div class="resource flex-group-center {{#if conditionDisplay.defense.affected}}condition-affected{{/if}}">
+				<label for="{{localize 'op.defense'}}" class="resource-label {{#if conditionDisplay.defense.affected}}condition-affected{{/if}}">{{localize "op.defense"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
-					<input type="text" name="system.defense.value" value="{{system.defense.value}}" data-dtype="Number" disabled />
+					<input
+						type="text"
+						name="system.defense.value"
+						value="{{system.defense.value}}"
+						data-dtype="Number"
+						{{disabled lockDerivedFields}}
+					/>
+					{{opConditionPenalty conditionDisplay "defense"}}
+					{{#if statBonuses.defense}}
+						<span class="derived-stat-badge" title="{{localize 'op.activeStatBonus'}}">+{{statBonuses.defense}}</span>
+					{{/if}}
 				</div>
 			</div>
-			<div class="resource flex-group-center">
-				<label for="{{localize 'op.dodge'}}" class="resource-label">{{localize "op.dodge"}}</label>
+			<div class="resource flex-group-center {{#if conditionDisplay.dodge.affected}}condition-affected{{/if}}">
+				<label for="{{localize 'op.dodge'}}" class="resource-label {{#if conditionDisplay.dodge.affected}}condition-affected{{/if}}">{{localize "op.dodge"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
-					<input type="text" name="system.defense.dodge" value="{{system.defense.dodge}}" data-dtype="Number" disabled />
+					<input
+						type="text"
+						name="system.defense.dodge"
+						value="{{system.defense.dodge}}"
+						data-dtype="Number"
+						{{disabled lockDerivedFields}}
+					/>
+					{{opConditionPenalty conditionDisplay "dodge"}}
+					{{#if statBonuses.defense}}
+						<span class="derived-stat-badge" title="{{localize 'op.activeStatBonus'}}">+{{statBonuses.defense}}</span>
+					{{/if}}
 				</div>
 			</div>
-			<div class="resource flex-group-center">
-				<label for="{{localize 'op.deslocamento'}}" class="resource-label">{{localize "op.deslocamento"}}</label>
+			<div class="resource flex-group-center {{#if conditionDisplay.desloc.affected}}condition-affected{{/if}}">
+				<label for="{{localize 'op.deslocamento'}}" class="resource-label {{#if conditionDisplay.desloc.affected}}condition-affected{{/if}}">{{localize "op.deslocamento"}}</label>
 				<div class="resource-content flexrow flex-center flex-between">
-					<input type="text" name="system.desloc.value" value="{{system.desloc.value}}" data-dtype="Number" disabled />
+					<input
+						type="text"
+						name="system.desloc.value"
+						value="{{system.desloc.value}}"
+						data-dtype="Number"
+						{{disabled lockDerivedFields}}
+					/>
+					{{opConditionPenalty conditionDisplay "desloc"}}
+					{{#if statBonuses.desloc}}
+						<span class="derived-stat-badge" title="{{localize 'op.activeStatBonus'}}">+{{statBonuses.desloc}}</span>
+					{{/if}}
 				</div>
 			</div>
 		</div>
+		{{#if activeRd.length}}
+			<div class="active-rd-summary flexrow flex-center">
+				<span class="active-rd-label">{{localize "op.activeRd"}}</span>
+				{{#each activeRd as |rd|}}
+					<span class="rd-type-badge" title="{{rd.label}}">{{rd.label}} {{rd.value}}</span>
+				{{/each}}
+			</div>
+		{{/if}}
+		{{> "op.actor-conditions"}}
 	</div>
 </header>

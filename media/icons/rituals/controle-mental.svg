@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-controle-mental">
+<stop offset="0%" stop-color="#d4af37" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-controle-mental)"/>
+
+<g transform="translate(0,0)" opacity="1">
+<circle cx="256" cy="200" r="50" fill="#ffd700" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round" paint-order="stroke fill"/>
+		 <path d="M220 260 L180 380 M292 260 L332 380 M240 280 L200 340 M272 280 L312 340" stroke="#ffd700" stroke-width="8" fill="none"/>
+</g>
+</svg>

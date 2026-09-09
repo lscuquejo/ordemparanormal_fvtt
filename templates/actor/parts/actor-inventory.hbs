@@ -10,7 +10,7 @@
 				placeholder="Nome"
 				class="patent-input"
 				data-dtype="String"
-				disabled
+				{{disabled @root.lockDerivedFields}}
 			/>
 		</div>
 
@@ -37,7 +37,7 @@
 						value="{{system.patent.itemLimit1}}"
 						placeholder="0"
 						data-dtype="Number"
-						disabled
+						{{disabled @root.lockDerivedFields}}
 					/>
 				</div>
 				<div class="limit-badge font-cat-2">
@@ -48,7 +48,7 @@
 						value="{{system.patent.itemLimit2}}"
 						placeholder="0"
 						data-dtype="Number"
-						disabled
+						{{disabled @root.lockDerivedFields}}
 					/>
 				</div>
 				<div class="limit-badge font-cat-3">
@@ -59,7 +59,7 @@
 						value="{{system.patent.itemLimit3}}"
 						placeholder="0"
 						data-dtype="Number"
-						disabled
+						{{disabled @root.lockDerivedFields}}
 					/>
 				</div>
 				<div class="limit-badge font-cat-4">
@@ -70,7 +70,7 @@
 						value="{{system.patent.itemLimit4}}"
 						placeholder="0"
 						data-dtype="Number"
-						disabled
+						{{disabled @root.lockDerivedFields}}
 					/>
 				</div>
 			</div>
@@ -136,7 +136,7 @@
 								</span>
 							</div>
 							<div class="item-meta-col col-prop">
-								<span class="badge-cat">{{ternary item.system.critical item.system.critical "—"}}</span>
+								<span class="badge-cat" title="{{localize 'op.effectiveCritical'}}">{{ternary item.effectiveCritical item.effectiveCritical (ternary item.system.critical item.system.critical "—")}}</span>
 							</div>
 							<div class="item-meta-col col-prop">
 								<span class="badge-cat">{{ternary item.system.range item.system.range "—"}}</span>
@@ -163,6 +163,35 @@
 								<a class="item-btn btn-delete" data-action="deleteDoc" title="Apagar Item"><i class="fas fa-trash"></i></a>
 							</div>
 						</div>
+
+						{{#if item.hasEnchantments}}
+							<div class="weapon-enchantments-row" style="padding: 4px 8px 8px 48px;">
+								{{#each item.enchantmentsList as |ench|}}
+									<span
+										class="badge-cat enchant-badge {{ternary ench.active 'is-active' ''}}"
+										data-enchant-id="{{ench.id}}"
+									>
+										<a
+											data-action="toggleWeaponEnchantment"
+											data-enchant-id="{{ench.id}}"
+											title="{{localize 'op.toggleWeaponEnchantment'}}: {{ench.summary}}"
+											class="enchant-toggle"
+										>
+											<i class="{{ternary ench.active 'fas' 'far'}} fa-sparkles"></i>
+											{{ench.ritualName}} ({{ench.tierLabel}})
+										</a>
+										<a
+											data-action="removeWeaponEnchantment"
+											data-enchant-id="{{ench.id}}"
+											class="enchant-remove"
+											title="{{localize 'op.removeWeaponEnchantment'}}"
+										>
+											<i class="fas fa-times"></i>
+										</a>
+									</span>
+								{{/each}}
+							</div>
+						{{/if}}
 
 						{{#if item.isExpanded}}
 							<div class="item-description">

@@ -99,14 +99,14 @@
 							<input type="text" name="system.attributes.hp.max" value="{{system.attributes.hp.max}}" data-dtype="Number" />
 						</div>
 					</div>
-					<div class="resource defense-box">
-						<label class="resource-label">{{localize "op.defense"}}</label>
+					<div class="resource defense-box {{#if conditionDisplay.defense.affected}}condition-affected{{/if}}">
+						<label class="resource-label {{#if conditionDisplay.defense.affected}}condition-affected{{/if}}">{{localize "op.defense"}} {{opConditionPenalty conditionDisplay "defense"}}</label>
 						<div class="resource-content">
 							<input type="text" name="system.defense.value" value="{{system.defense.value}}" data-dtype="Number" />
 						</div>
 					</div>
-					<div class="resource movement-box">
-						<label class="resource-label">{{localize "op.deslocamento"}}</label>
+					<div class="resource movement-box {{#if conditionDisplay.desloc.affected}}condition-affected{{/if}}">
+						<label class="resource-label {{#if conditionDisplay.desloc.affected}}condition-affected{{/if}}">{{localize "op.deslocamento"}} {{opConditionPenalty conditionDisplay "desloc"}}</label>
 						<div class="resource-content">
 							<input
 								type="text"
@@ -120,14 +120,14 @@
 
 				<!-- ATRIBUTOS -->
 				<div class="attributes-mini flexrow">
-					<div class="resource attr-box">
+					<div class="resource attr-box {{#if conditionDisplay.attributes.dex.affected}}condition-affected{{/if}}">
 						<label
-							class="resource-label rollable pointer"
+							class="resource-label rollable pointer {{#if conditionDisplay.attributes.dex.affected}}condition-affected{{/if}}"
 							data-action="onRollAttributeTest"
 							data-rollType="attribute"
 							data-key="dex"
 							title="{{localize 'op.attDex'}}"
-						>AGI</label>
+						>AGI {{opConditionPenalty conditionDisplay "attributes" "dex"}}</label>
 						<div class="resource-content"><input
 								type="text"
 								name="system.attributes.dex.value"
@@ -135,14 +135,14 @@
 								data-dtype="Number"
 							/></div>
 					</div>
-					<div class="resource attr-box">
+					<div class="resource attr-box {{#if conditionDisplay.attributes.str.affected}}condition-affected{{/if}}">
 						<label
-							class="resource-label rollable pointer"
+							class="resource-label rollable pointer {{#if conditionDisplay.attributes.str.affected}}condition-affected{{/if}}"
 							data-action="onRollAttributeTest"
 							data-rollType="attribute"
 							data-key="str"
 							title="{{localize 'op.attStr'}}"
-						>FOR</label>
+						>FOR {{opConditionPenalty conditionDisplay "attributes" "str"}}</label>
 						<div class="resource-content"><input
 								type="text"
 								name="system.attributes.str.value"
@@ -150,14 +150,14 @@
 								data-dtype="Number"
 							/></div>
 					</div>
-					<div class="resource attr-box">
+					<div class="resource attr-box {{#if conditionDisplay.attributes.int.affected}}condition-affected{{/if}}">
 						<label
-							class="resource-label rollable pointer"
+							class="resource-label rollable pointer {{#if conditionDisplay.attributes.int.affected}}condition-affected{{/if}}"
 							data-action="onRollAttributeTest"
 							data-rollType="attribute"
 							data-key="int"
 							title="{{localize 'op.attInt'}}"
-						>INT</label>
+						>INT {{opConditionPenalty conditionDisplay "attributes" "int"}}</label>
 						<div class="resource-content"><input
 								type="text"
 								name="system.attributes.int.value"
@@ -165,14 +165,14 @@
 								data-dtype="Number"
 							/></div>
 					</div>
-					<div class="resource attr-box">
+					<div class="resource attr-box {{#if conditionDisplay.attributes.pre.affected}}condition-affected{{/if}}">
 						<label
-							class="resource-label rollable pointer"
+							class="resource-label rollable pointer {{#if conditionDisplay.attributes.pre.affected}}condition-affected{{/if}}"
 							data-action="onRollAttributeTest"
 							data-rollType="attribute"
 							data-key="pre"
 							title="{{localize 'op.attPre'}}"
-						>PRE</label>
+						>PRE {{opConditionPenalty conditionDisplay "attributes" "pre"}}</label>
 						<div class="resource-content"><input
 								type="text"
 								name="system.attributes.pre.value"
@@ -180,14 +180,14 @@
 								data-dtype="Number"
 							/></div>
 					</div>
-					<div class="resource attr-box">
+					<div class="resource attr-box {{#if conditionDisplay.attributes.vit.affected}}condition-affected{{/if}}">
 						<label
-							class="resource-label rollable pointer"
+							class="resource-label rollable pointer {{#if conditionDisplay.attributes.vit.affected}}condition-affected{{/if}}"
 							data-action="onRollAttributeTest"
 							data-rollType="attribute"
 							data-key="vit"
 							title="{{localize 'op.attVit'}}"
-						>VIG</label>
+						>VIG {{opConditionPenalty conditionDisplay "attributes" "vit"}}</label>
 						<div class="resource-content"><input
 								type="text"
 								name="system.attributes.vit.value"
@@ -196,6 +196,7 @@
 							/></div>
 					</div>
 				</div>
+				{{> "op.actor-conditions"}}
 
 			</div>
 
@@ -203,7 +204,7 @@
 			<div class="col-right flexcol">
 				<div class="threat-skills-container">
 					{{#each system.skills as |skill key|}}
-						<div class="skill-box flexrow">
+						<div class="skill-box flexrow {{#if (lookup (lookup @root.conditionDisplay.skills key) 'affected')}}condition-affected{{/if}}">
 							{{#if (eq key "freeSkill")}}
 								<div class="free-skill-header flexrow">
 									<input
@@ -212,6 +213,7 @@
 										value="{{skill.name}}"
 										placeholder="{{localize 'op.skill.freeSkill'}}"
 									/>
+									{{opConditionPenalty @root.conditionDisplay "skills" key}}
 									<i
 										class="fas fa-dice rollable pointer"
 										data-action="onRollSkillCheck"
@@ -222,7 +224,7 @@
 								</div>
 							{{else}}
 								<label
-									class="skill-label rollable pointer"
+									class="skill-label rollable pointer {{#if (lookup (lookup @root.conditionDisplay.skills key) 'affected')}}condition-affected{{/if}}"
 									data-action="onRollSkillCheck"
 									data-key="{{key}}"
 									data-label="{{skill.label}}"
@@ -230,6 +232,7 @@
 								>
 									{{skill.label}}
 									<span>({{lookup skill.attr 0}})</span>
+									{{opConditionPenalty @root.conditionDisplay "skills" key}}
 								</label>
 							{{/if}}
 							<div class="item-space flexrow">

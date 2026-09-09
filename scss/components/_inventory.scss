@@ -281,6 +281,48 @@
 		}
 	}
 
+	/* Rituals tab uses dark-themed list styles elsewhere; force readable light text. */
+	.rituals-tab {
+		.inventory-ritual-header {
+			.label {
+				color: #f5f5f5 !important;
+			}
+
+			.badge-ritual {
+				color: #ffffff !important;
+				border-color: rgba(255, 255, 255, 0.18) !important;
+				background: rgba(255, 255, 255, 0.08) !important;
+			}
+
+			.ritual-dt-zone-bonus {
+				color: #c4b5fd;
+				font-weight: 700;
+				font-size: 0.95em;
+			}
+		}
+
+		.inventory-list-header {
+			color: #e8e8e8 !important;
+			border-color: rgba(255, 255, 255, 0.12) !important;
+		}
+
+		.item-name,
+		.item-name.item-toggle {
+			color: #f5f5f5 !important;
+			text-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
+
+			&:hover {
+				color: #ffffff !important;
+			}
+		}
+
+		.item-meta-col,
+		.badge-cat {
+			color: #e8e8e8 !important;
+			border-color: rgba(255, 255, 255, 0.14) !important;
+		}
+	}
+
 	.inventory-list-header,
 	.item-row-main {
 		display: flex;
@@ -827,6 +869,63 @@
 				color: #666;
 				margin: 0 2px;
 			}
+		}
+	}
+
+	.weapon-enchantments-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		align-items: center;
+
+		.enchant-badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.25rem;
+
+			&.is-active {
+				border-color: rgba(46, 125, 50, 0.45);
+			}
+
+			.enchant-toggle {
+				cursor: pointer;
+				color: inherit;
+			}
+
+			.enchant-remove {
+				cursor: pointer;
+				opacity: 0.55;
+				padding: 0 0.15rem;
+				color: inherit;
+
+				&:hover {
+					opacity: 1;
+					color: #c62828;
+				}
+			}
+		}
+	}
+}
+
+/* Force readable text for all inventory-like tabs on the dark sheet */
+form.ordemparanormal.actor {
+	.inventory-tab {
+		.inventory-list-header,
+		.item-row-main,
+		.item-description {
+			color: #e8e8e8 !important;
+		}
+
+		.item-name,
+		.item-name.item-toggle {
+			color: #f5f5f5 !important;
+			text-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
+		}
+
+		.item-meta-col,
+		.badge-cat {
+			color: #e8e8e8 !important;
+			border-color: rgba(255, 255, 255, 0.14) !important;
 		}
 	}
 }

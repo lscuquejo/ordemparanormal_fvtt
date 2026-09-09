@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-dissipar-ritual">
+<stop offset="0%" stop-color="#8a8a9a" stop-opacity="1"/>
+<stop offset="100%" stop-color="#1a1a22" stop-opacity="1"/>
+</radialGradient>
+<filter id="smoke-dissipar-ritual"><feGaussianBlur stdDeviation="2"/></filter>
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-dissipar-ritual)"/>
+<ellipse cx="200" cy="340" rx="90" ry="30" fill="#f0f0f5" opacity="0.15"/>
+			<ellipse cx="310" cy="360" rx="70" ry="25" fill="#f0f0f5" opacity="0.12"/>
+<g transform="translate(0,0)" opacity="0.82" filter="url(#smoke-dissipar-ritual)">
+<path d="M256 140 L320 280 L280 280 L340 380 L220 300 L260 300 L180 140 Z" fill="#f0f0f5" opacity="0.5"/>
+		 <path d="M200 200 L312 312 M312 200 L200 312" stroke="#f0f0f5" stroke-width="12"/>
+</g>
+</svg>

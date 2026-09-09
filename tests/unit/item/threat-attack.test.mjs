@@ -107,7 +107,7 @@ describe("OrdemItem.rollAttack — numberOfAttacks > 1", () => {
 });
 
 describe("OrdemItem.rollVolleyDamage — dano por-ataque (multi-ataque)", () => {
-	it("rola uma vez por ataque que ACERTOU; dobra só os que critaram; pula miss e pendente", async () => {
+	it("rola uma vez por ataque revelado; crit só se acertou; pula pendente", async () => {
 		const item = makeArmamentItem({ numberOfAttacks: 4 });
 		item.system.critical = "20"; // x2
 		const calls = [];
@@ -118,12 +118,12 @@ describe("OrdemItem.rollVolleyDamage — dano por-ataque (multi-ataque)", () => 
 		const attackResults = [
 			{ hit: true, isCritical: true, revealed: true, actorUuid: "uuidA", attackMessageId: "m1", attackIndex: 1 },
 			{ hit: true, isCritical: false, revealed: true, actorUuid: "uuidA", attackMessageId: "m2", attackIndex: 2 },
-			{ hit: false, isCritical: true, revealed: true, actorUuid: "uuidA", attackMessageId: "m3", attackIndex: 3 }, // miss → pula
+			{ hit: false, isCritical: true, revealed: true, actorUuid: "uuidA", attackMessageId: "m3", attackIndex: 3 }, // miss → ainda rola
 			{ hit: true, isCritical: false, revealed: false, actorUuid: "uuidA", attackMessageId: "m4", attackIndex: 4 }, // pendente → pula
 		];
 		const rolls = await item.rollVolleyDamage(attackResults, { event: {} });
-		expect(rolls).toHaveLength(2); // só os 2 hits revelados
-		expect(calls).toHaveLength(2);
+		expect(rolls).toHaveLength(3); // 2 hits + 1 miss revelado
+		expect(calls).toHaveLength(3);
 		// ataque #1: crítico → multiplier vem da fórmula
 		expect(calls[0].critical).toEqual({ isCritical: true, multiplier: 2 });
 		expect(calls[0].hitResult.actorUuid).toBe("uuidA");
@@ -132,6 +132,9 @@ describe("OrdemItem.rollVolleyDamage — dano por-ataque (multi-ataque)", () => 
 		// ataque #2: normal → sem multiplicação
 		expect(calls[1].critical).toBe(false);
 		expect(calls[1].hitResult.actorUuid).toBe("uuidA");
+		// ataque #3: miss → sem crítico mesmo com isCritical true
+		expect(calls[2].critical).toBe(false);
+		expect(calls[2].hitResult.hit).toBe(false);
 	});
 
 	it("um crítico em x4 dobra SÓ aquele ataque (1 crit + 3 normais)", async () => {
@@ -164,12 +167,12 @@ describe("OrdemItem.rollVolleyDamage — dano por-ataque (multi-ataque)", () => 
 		expect(calls[0].critical).toEqual({ isCritical: true, multiplier: 3 });
 	});
 
-	it("nenhum acerto → nenhuma rolagem", async () => {
+	it("miss revelado → ainda rola dano uma vez", async () => {
 		const item = makeArmamentItem({ numberOfAttacks: 2 });
 		item.rollDamage = vi.fn(async () => ({}));
 		const rolls = await item.rollVolleyDamage([{ hit: false, isCritical: true, revealed: true }], { event: {} });
-		expect(rolls).toHaveLength(0);
-		expect(item.rollDamage).not.toHaveBeenCalled();
+		expect(rolls).toHaveLength(1);
+		expect(item.rollDamage).toHaveBeenCalledOnce();
 	});
 
 	it("attackResults vazio/undefined → sem rolagem e sem crash", async () => {

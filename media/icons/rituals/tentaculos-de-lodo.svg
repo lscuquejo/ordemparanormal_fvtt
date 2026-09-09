@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-tentaculos-de-lodo">
+<stop offset="0%" stop-color="#2a2a2a" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-tentaculos-de-lodo)"/>
+<circle cx="256" cy="256" r="190" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.2"/>
+			<circle cx="256" cy="256" r="150" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.35"/>
+			<circle cx="256" cy="256" r="110" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.5"/>
+<g transform="translate(0,0)" opacity="1">
+<path d="M256 180 Q200 240 180 320 M256 180 Q312 240 332 320 M256 180 Q256 280 256 380" stroke="#ffffff" stroke-width="14" fill="none"/>
+		 <circle cx="256" cy="180" r="25" fill="#ffffff"/>
+</g>
+</svg>

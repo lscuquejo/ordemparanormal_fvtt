@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
 .lowercase {
 	text-transform: lowercase;
 }
@@ -33,7 +34,7 @@ dialog.ordemparanormal.application {
 }
 
 .window-app {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 }
 
 .rollable:hover,
@@ -281,6 +282,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal {
 	@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 	@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+	@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
 }
 .system-ordemparanormal .lowercase {
 	text-transform: lowercase;
@@ -366,7 +368,7 @@ dialog.ordemparanormal.application {
 	flex: 1;
 }
 .system-ordemparanormal .threat .threat-header .identity-info .name-row .charname input {
-	font-family: "Libre Baskerville", serif;
+	font-family: "Cinzel", "Libre Baskerville", serif;
 	font-weight: 800;
 	font-size: 2.2rem;
 	border: none;
@@ -618,6 +620,16 @@ dialog.ordemparanormal.application {
 	.col-right
 	.threat-skills-container
 	.skill-box
+	.skill-label.condition-affected {
+	color: #b92a4c;
+}
+.system-ordemparanormal
+	.threat
+	.threat-body
+	.central-columns
+	.col-right
+	.threat-skills-container
+	.skill-box
 	.skill-label
 	span {
 	font-size: 9px;
@@ -739,6 +751,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal {
 	@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 	@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+	@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
 }
 .system-ordemparanormal .lowercase {
 	text-transform: lowercase;
@@ -774,7 +787,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal section.itemsheet,
 .system-ordemparanormal form.ordemparanormal.actor {
 	overflow: hidden;
-	color: #171717;
+	color: #e5e5e5;
 }
 .system-ordemparanormal section.itemsheet .scrollable,
 .system-ordemparanormal form.ordemparanormal.actor .scrollable {
@@ -851,7 +864,7 @@ dialog.ordemparanormal.application {
 	overflow: hidden;
 }
 .system-ordemparanormal .item-form {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 }
 .system-ordemparanormal .sheet-tabs {
 	flex: 0 0 auto;
@@ -881,6 +894,52 @@ dialog.ordemparanormal.application {
 }
 .system-ordemparanormal .skills-content .skill .modifier {
 	max-width: 30px;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 1px;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-wrapper .dice-mod-btn {
+	width: 16px;
+	height: 16px;
+	min-width: unset;
+	padding: 0;
+	font-size: 13px;
+	line-height: 1;
+	border: 1px solid #aaa;
+	border-radius: 3px;
+	background: rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+	color: #444;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-wrapper .dice-mod-btn:hover {
+	background: rgba(139, 0, 0, 0.15);
+	border-color: #8b0000;
+	color: #8b0000;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-wrapper .dice-mod-value {
+	min-width: 28px;
+	text-align: center;
+	font-size: 11px;
+	font-weight: bold;
+	color: #555;
+	display: flex;
+	align-items: center;
+	gap: 1px;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-wrapper .dice-mod-value .dice-mod-icon {
+	font-size: 10px;
+	opacity: 0.7;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-wrapper .dice-mod-value.positive {
+	color: #2a6e2a;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-wrapper .dice-mod-value.negative {
+	color: #8b0000;
 }
 .system-ordemparanormal .skills-content .skill .rollFreeSkill {
 	position: absolute;
@@ -937,7 +996,7 @@ dialog.ordemparanormal.application {
 	text-align: center;
 }
 .system-ordemparanormal .ritual-dt p {
-	font-family: "Optima Nova LT PRO", "Source Sans 3", sans-serif, "Arial";
+	font-family: "Optima Nova LT PRO", "Raleway", "Source Sans 3", sans-serif, "Arial";
 	font-weight: bold;
 }
 .system-ordemparanormal .item .sheet-header {
@@ -1092,8 +1151,8 @@ dialog.ordemparanormal.application {
 	h1.charname
 	input {
 	font-size: 28px;
-	font-family: "Source Sans 3", sans-serif;
-	font-weight: bold;
+	font-family: "Cinzel Decorative", "Cinzel", serif;
+	font-weight: 700;
 	width: 100%;
 	border: none;
 	border-radius: 4px;
@@ -1102,6 +1161,161 @@ dialog.ordemparanormal.application {
 	height: 100%;
 	line-height: 36px;
 	min-width: unset;
+	color: #ffffff;
+	letter-spacing: 0.04em;
+	text-shadow:
+		0 0 16px rgba(185, 28, 28, 0.5),
+		0 2px 4px rgba(0, 0, 0, 0.8);
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.age-box {
+	flex: 0 0 72px;
+	margin: 0 0 4px;
+	padding: 2px 6px 4px;
+	background: #111111;
+	border: 1px solid rgba(139, 0, 0, 0.3);
+	border-radius: 6px;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.age-box
+	.resource-label {
+	display: block;
+	margin: 0;
+	color: #e8e8e8;
+	font-size: 9px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.age-box
+	.resource-content
+	input {
+	width: 100%;
+	height: 28px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: #ffffff;
+	font-size: 20px;
+	font-weight: 700;
+	text-align: center;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.unlock-fields-btn {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 10px;
+	margin: 0 0 4px;
+	border: 1px solid rgba(139, 0, 0, 0.3);
+	border-radius: 4px;
+	background: rgba(139, 0, 0, 0.15);
+	color: #e5e5e5;
+	font-family: "Raleway", sans-serif;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.unlock-fields-btn
+	i {
+	color: #ef4444;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.unlock-fields-btn:hover {
+	background: rgba(185, 28, 28, 0.28);
+	border-color: #b91c1c;
+	color: #ffffff;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.unlock-fields-btn.is-active {
+	background: rgba(22, 163, 74, 0.18);
+	border-color: rgba(22, 163, 74, 0.5);
+	color: #86efac;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.unlock-fields-btn.is-active
+	i {
+	color: #86efac;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.unlock-fields-btn.restore-auto-btn.is-active {
+	background: rgba(124, 58, 237, 0.18);
+	border-color: rgba(124, 58, 237, 0.5);
+	color: #c4b5fd;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.unlock-fields-btn.restore-auto-btn.is-active
+	i {
+	color: #c4b5fd;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.sheet-mode-buttons {
+	display: flex;
+	flex: 0 0 auto;
+	gap: 4px;
+	align-items: flex-end;
 }
 .system-ordemparanormal
 	form.ordemparanormal.actor
@@ -1137,6 +1351,81 @@ dialog.ordemparanormal.application {
 	.resource-label {
 	font-size: 11px;
 	margin-bottom: 2px;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.progress-group
+	.resource
+	.level-up-control {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.progress-group
+	.resource
+	.level-up-control
+	.progress-value {
+	font-size: 14px;
+	font-weight: 700;
+	min-width: 2.5rem;
+	text-align: center;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.progress-group
+	.resource
+	.level-up-control
+	.level-up-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: 11px;
+	padding: 0.15rem 0.45rem;
+	border-radius: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	background: rgba(46, 125, 50, 0.2);
+	color: inherit;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.progress-group
+	.resource
+	.level-up-control
+	.level-up-btn:hover:not(:disabled) {
+	background: rgba(46, 125, 50, 0.35);
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.header-identify
+	.progress-group
+	.resource
+	.level-up-control
+	.level-up-btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
 }
 .system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-top .header-fields {
 	/* Classe, Origem, Trilha (Pills) */
@@ -1388,6 +1677,16 @@ dialog.ordemparanormal.application {
 	.header-fields
 	.resources-main
 	.resource
+	.resource-label.condition-affected {
+	color: #b92a4c;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-top
+	.header-fields
+	.resources-main
+	.resource
 	.resource-content {
 	padding: 2px 4px;
 }
@@ -1434,11 +1733,19 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .resources .resource-label {
 	font-size: 12px;
 }
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource-label.condition-affected {
+	color: #b92a4c;
+}
 .system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .resources .resource-content {
 	padding: 1px;
 }
 .system-ordemparanormal {
-	/* --- NAVEGAÇÃO DE TABS (ESTILO MINIMALISTA) --- */
+	/* --- NAVEGAÇÃO DE TABS (DARK OP STYLE) --- */
 }
 .system-ordemparanormal form.ordemparanormal.actor nav.sheet-tabs.tabs,
 .system-ordemparanormal form.ordemparanormal.item nav.sheet-tabs.tabs {
@@ -1447,6 +1754,8 @@ dialog.ordemparanormal.application {
 	align-items: center;
 	padding: 0 16px;
 	border: none;
+	border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+	background: #0a0a0a;
 }
 .system-ordemparanormal form.ordemparanormal.actor nav.sheet-tabs.tabs a,
 .system-ordemparanormal form.ordemparanormal.item nav.sheet-tabs.tabs a {
@@ -1454,47 +1763,692 @@ dialog.ordemparanormal.application {
 	align-items: center;
 	justify-content: center;
 	gap: 8px;
-	padding: 0 16px;
+	padding: 0 14px;
 	height: 100%;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-weight: 500;
-	font-size: 14px;
-	color: #7f7a67;
+	font-size: 13px;
+	color: #888888;
 	text-decoration: none;
 	position: relative;
 	transition: all 0.2s ease;
+	border-bottom: 2px solid transparent;
+	margin-bottom: -1px;
 }
 .system-ordemparanormal form.ordemparanormal.actor nav.sheet-tabs.tabs a i,
 .system-ordemparanormal form.ordemparanormal.item nav.sheet-tabs.tabs a i {
-	font-size: 13px;
-	color: #777;
+	font-size: 12px;
 	transition: color 0.2s ease;
 }
 .system-ordemparanormal form.ordemparanormal.actor nav.sheet-tabs.tabs a:hover,
 .system-ordemparanormal form.ordemparanormal.item nav.sheet-tabs.tabs a:hover {
-	color: #000;
-	text-shadow: none;
+	color: #e5e5e5;
+	text-shadow: 0 0 8px rgba(185, 28, 28, 0.5);
 }
 .system-ordemparanormal form.ordemparanormal.actor nav.sheet-tabs.tabs a:hover i,
 .system-ordemparanormal form.ordemparanormal.item nav.sheet-tabs.tabs a:hover i {
-	color: #7f7a67;
+	color: #ef4444;
 }
 .system-ordemparanormal form.ordemparanormal.actor nav.sheet-tabs.tabs a.active,
 .system-ordemparanormal form.ordemparanormal.item nav.sheet-tabs.tabs a.active {
-	color: #1f1f1f;
-	font-weight: 600;
-	text-shadow: none;
+	color: #ef4444;
+	font-weight: 700;
+	border-bottom-color: #b91c1c;
+	text-shadow: 0 0 10px rgba(185, 28, 28, 0.5);
 }
 .system-ordemparanormal form.ordemparanormal.actor nav.sheet-tabs.tabs a.active i,
 .system-ordemparanormal form.ordemparanormal.item nav.sheet-tabs.tabs a.active i {
-	color: #151515;
+	color: #ef4444;
+}
+.system-ordemparanormal {
+	/* ============================================================ */
+	/* ORDEM PARANORMAL — DARK THEME GLOBAL                         */
+	/* ============================================================ */
+}
+.system-ordemparanormal form.ordemparanormal.actor {
+	font-family: "Raleway", sans-serif;
+	--color-text-primary: #e5e5e5;
+	--color-text-secondary: #888888;
+	--color-text-emphatic: #ffffff;
+	--input-text-color: #ffffff;
+}
+.system-ordemparanormal form.ordemparanormal.actor input,
+.system-ordemparanormal form.ordemparanormal.actor select,
+.system-ordemparanormal form.ordemparanormal.actor textarea {
+	color: #e5e5e5;
+	font-family: "Raleway", sans-serif;
+}
+.system-ordemparanormal form.ordemparanormal.actor {
+	/* Background geral da ficha */
+}
+.system-ordemparanormal form.ordemparanormal.actor section.window-content {
+	background: #0a0a0a !important;
+	color: #e5e5e5;
+	font-family: "Raleway", sans-serif;
+}
+.system-ordemparanormal form.ordemparanormal.actor {
+	/* Header geral */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op {
+	background: #0a0a0a;
+	border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+	/* Nome do personagem */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-identify h1.charname input {
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+	font-family: "Cinzel Decorative", "Cinzel", serif !important;
+	font-weight: 700 !important;
+	font-size: 28px !important;
+	letter-spacing: 0.04em;
+	text-shadow:
+		0 0 16px rgba(185, 28, 28, 0.5),
+		0 2px 4px rgba(0, 0, 0, 0.8);
+	border-bottom: 1px solid rgba(139, 0, 0, 0.3) !important;
+	background: transparent !important;
+	caret-color: #ffffff;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-identify .age-box {
+	background: #111111 !important;
+	border-color: rgba(139, 0, 0, 0.3) !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-identify .age-box .resource-label {
+	color: #e8e8e8 !important;
+	background: transparent !important;
+	border: none !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-identify
+	.age-box
+	.resource-content
+	input {
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+	background: transparent !important;
+	border: none !important;
+	text-align: center;
+	caret-color: #ffffff;
+	font-size: 22px !important;
+	font-weight: 900 !important;
+	text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.rituals-tab
+	.inventory-ritual-header
+	.ritual-box
+	.label {
+	color: #f2f2f2 !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.rituals-tab
+	.inventory-ritual-header
+	.ritual-box
+	.badge-ritual {
+	color: #ffffff !important;
+	border-color: rgba(255, 255, 255, 0.18) !important;
+	background: rgba(255, 255, 255, 0.08) !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .rituals-tab .item-name,
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .rituals-tab .item-name.item-toggle {
+	color: #f5f5f5 !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .rituals-tab .item-name:hover,
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .rituals-tab .item-name.item-toggle:hover {
+	color: #ffffff !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .rituals-tab .item-meta-col,
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .rituals-tab .badge-cat {
+	color: #e8e8e8 !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op {
+	/* Pills de classe/origem/trilha */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .agent-details.resources .interactive-pill {
+	background: rgba(139, 0, 0, 0.1) !important;
+	border-color: rgba(139, 0, 0, 0.3) !important;
+	color: #e5e5e5 !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.agent-details.resources
+	.interactive-pill:hover {
+	background: rgba(139, 0, 0, 0.22) !important;
+	border-color: #b91c1c !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .agent-details.resources .empty-slot {
+	border-color: rgba(139, 0, 0, 0.25) !important;
+	color: #888888 !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .agent-details.resources .empty-slot:hover {
+	border-color: #b91c1c !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .agent-details.resources .item-name-text {
+	color: #e5e5e5 !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op {
+	/* -------- BARRAS DE STATUS (PV / SAN / PE / PD) -------- */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .resources-main .resource {
+	background: #111111 !important;
+	border-color: rgba(139, 0, 0, 0.3) !important;
+	border-radius: 6px;
+	position: relative;
+	overflow: hidden;
+	/* brilho superior ritual */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .resources-main .resource::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, #b91c1c, transparent);
+	opacity: 0.6;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .resources-main .resource .resource-label {
+	background: rgba(139, 0, 0, 0.18) !important;
+	color: #ef4444 !important;
+	border-bottom-color: rgba(139, 0, 0, 0.3) !important;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-size: 10px !important;
+	font-weight: 700;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.resources-main
+	.resource
+	.resource-content
+	input {
+	color: #e5e5e5 !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.resources-main
+	.resource
+	.resource-content
+	span {
+	color: #e8e8e8 !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.resources-main
+	.resource
+	.resource-content
+	.condition-penalty {
+	color: #ffd6dc !important;
+	font-weight: 800;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op {
+	/* -------- ATRIBUTOS — ESTILO RITUAL/RUNA -------- */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom {
+	background: rgba(10, 10, 10, 0.6) !important;
+	border-color: rgba(139, 0, 0, 0.3) !important;
+	border-radius: 8px;
+	/* linha decorativa topo */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom::before {
+	content: "";
+	display: block;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, #8b0000, #b91c1c, #8b0000, transparent);
+	margin-bottom: 4px;
+	opacity: 0.7;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .active-conditions {
+	background: rgba(185, 42, 76, 0.18);
+	border-color: rgba(255, 92, 112, 0.4);
+	color: #f5f5f5 !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.active-conditions
+	.active-conditions-label,
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.active-conditions
+	.active-condition-name {
+	color: #ffd6dc !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.active-conditions
+	.active-condition,
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.active-conditions
+	.active-condition-desc {
+	color: #f5f5f5 !important;
+	opacity: 1;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.active-conditions
+	.active-condition-reduced {
+	color: #ffffff !important;
+	font-weight: 700;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .resources .resource {
+	position: relative;
+	background: #111111;
+	border: 1px solid rgba(139, 0, 0, 0.3);
+	border-radius: 6px;
+	padding: 4px 6px;
+	transition: all 0.2s ease;
+	/* brilho runa no hover */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .resources .resource:hover {
+	border-color: #b91c1c;
+	box-shadow:
+		0 0 10px rgba(185, 28, 28, 0.5),
+		inset 0 0 8px rgba(139, 0, 0, 0.1);
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .resources .resource {
+	/* canto decorativo ⌐ ¬ */
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .resources .resource::before {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 6px;
+	height: 6px;
+	border-top: 1px solid #8b0000;
+	border-left: 1px solid #8b0000;
+	opacity: 0.8;
+}
+.system-ordemparanormal form.ordemparanormal.actor header.sheet-header-op .header-bottom .resources .resource::after {
+	content: "";
+	position: absolute;
+	bottom: 2px;
+	right: 2px;
+	width: 6px;
+	height: 6px;
+	border-bottom: 1px solid #8b0000;
+	border-right: 1px solid #8b0000;
+	opacity: 0.8;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-label {
+	color: #e8e8e8 !important;
+	font-size: 10px !important;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	font-weight: 600;
+	/* rollable attrs ficam vermelhos */
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-label.rollable {
+	color: #ffb4b4 !important;
+	cursor: pointer;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-label.rollable:hover {
+	color: #fff !important;
+	text-shadow: 0 0 8px rgba(185, 28, 28, 0.5);
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-label.condition-affected {
+	color: #ffd6dc !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource.condition-affected {
+	border-color: #b92a4c !important;
+	box-shadow: 0 0 8px rgba(185, 42, 76, 0.35);
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-content
+	input {
+	color: #ffffff !important;
+	font-size: 20px !important;
+	font-weight: 700;
+	text-shadow: 0 0 8px rgba(185, 28, 28, 0.5);
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-content
+	span,
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-content
+	.condition-penalty {
+	color: #f5f5f5 !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-content
+	.attr-ritual-bonus {
+	margin-left: 0.25rem;
+	font-weight: 700;
+	color: #9fd89f !important;
+}
+.system-ordemparanormal
+	form.ordemparanormal.actor
+	header.sheet-header-op
+	.header-bottom
+	.resources
+	.resource
+	.resource-content
+	.condition-penalty {
+	color: #ffd6dc !important;
+	font-weight: 800;
+}
+.system-ordemparanormal {
+	/* ============================================================ */
+	/* PERÍCIAS — CORES POR GRAU DE TREINAMENTO                     */
+	/* ============================================================ */
+}
+.system-ordemparanormal .skills-content {
+	/* fundo da seção */
+	background: transparent;
+	/* linha base das perícias */
+}
+.system-ordemparanormal .skills-content .skill {
+	border-radius: 4px;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease;
+	border: 1px solid transparent;
+	margin-bottom: 1px;
+	/* nome da perícia rollable */
+}
+.system-ordemparanormal .skills-content .skill .skill-name.rollable {
+	color: #e5e5e5 !important;
+}
+.system-ordemparanormal .skills-content .skill .skill-name.rollable:hover {
+	color: #ef4444 !important;
+	text-shadow: 0 0 6px rgba(185, 28, 28, 0.5);
+}
+.system-ordemparanormal .skills-content .skill {
+	/* selects de treino */
+}
+.system-ordemparanormal .skills-content .skill select {
+	background: transparent;
+	color: #888888;
+}
+.system-ordemparanormal .skills-content .skill {
+	/* inputs de mod/total */
+}
+.system-ordemparanormal .skills-content .skill input[readonly] {
+	color: #888888 !important;
+}
+.system-ordemparanormal .skills-content .skill .modifier {
+	color: #e5e5e5 !important;
+}
+.system-ordemparanormal .skills-content .skill {
+	/* hover geral */
+}
+.system-ordemparanormal .skills-content .skill:hover {
+	background: rgba(139, 0, 0, 0.06);
+	border-color: rgba(139, 0, 0, 0.2);
+}
+.system-ordemparanormal .skills-content .skill {
+	/* ---- TREINADO (+5) — VERDE ---- */
+}
+.system-ordemparanormal .skills-content .skill.degree-trained {
+	background: rgba(22, 163, 74, 0.12);
+	border-color: rgba(22, 163, 74, 0.4);
+}
+.system-ordemparanormal .skills-content .skill.degree-trained .skill-name {
+	color: #16a34a !important;
+	font-weight: 600;
+}
+.system-ordemparanormal .skills-content .skill.degree-trained select {
+	color: #16a34a !important;
+}
+.system-ordemparanormal .skills-content .skill.degree-trained:hover {
+	background: rgba(22, 163, 74, 0.18);
+}
+.system-ordemparanormal .skills-content .skill {
+	/* ---- VETERANO (+10) — AZUL ---- */
+}
+.system-ordemparanormal .skills-content .skill.degree-veteran {
+	background: rgba(37, 99, 235, 0.12);
+	border-color: rgba(37, 99, 235, 0.4);
+}
+.system-ordemparanormal .skills-content .skill.degree-veteran .skill-name {
+	color: #2563eb !important;
+	font-weight: 600;
+}
+.system-ordemparanormal .skills-content .skill.degree-veteran select {
+	color: #2563eb !important;
+}
+.system-ordemparanormal .skills-content .skill.degree-veteran:hover {
+	background: rgba(37, 99, 235, 0.18);
+}
+.system-ordemparanormal .skills-content .skill {
+	/* ---- EXPERT (+15) — LARANJA ---- */
+}
+.system-ordemparanormal .skills-content .skill.degree-expert {
+	background: rgba(234, 88, 12, 0.12);
+	border-color: rgba(234, 88, 12, 0.4);
+}
+.system-ordemparanormal .skills-content .skill.degree-expert .skill-name {
+	color: #ea580c !important;
+	font-weight: 700;
+}
+.system-ordemparanormal .skills-content .skill.degree-expert select {
+	color: #ea580c !important;
+}
+.system-ordemparanormal .skills-content .skill.degree-expert:hover {
+	background: rgba(234, 88, 12, 0.18);
+}
+.system-ordemparanormal .skills-content .skill {
+	/* ---- MESTRE (+20) — ÂMBAR ---- */
+}
+.system-ordemparanormal .skills-content .skill.degree-master,
+.system-ordemparanormal .skills-content .skill.degree-alfa,
+.system-ordemparanormal .skills-content .skill.degree-gama,
+.system-ordemparanormal .skills-content .skill.degree-delta {
+	background: rgba(217, 119, 6, 0.12);
+	border-color: rgba(217, 119, 6, 0.4);
+}
+.system-ordemparanormal .skills-content .skill.degree-master .skill-name,
+.system-ordemparanormal .skills-content .skill.degree-alfa .skill-name,
+.system-ordemparanormal .skills-content .skill.degree-gama .skill-name,
+.system-ordemparanormal .skills-content .skill.degree-delta .skill-name {
+	color: #d97706 !important;
+	font-weight: 700;
+	text-shadow: 0 0 6px rgba(212, 160, 23, 0.4);
+}
+.system-ordemparanormal .skills-content .skill.degree-master select,
+.system-ordemparanormal .skills-content .skill.degree-alfa select,
+.system-ordemparanormal .skills-content .skill.degree-gama select,
+.system-ordemparanormal .skills-content .skill.degree-delta select {
+	color: #d97706 !important;
+}
+.system-ordemparanormal .skills-content .skill.degree-master:hover,
+.system-ordemparanormal .skills-content .skill.degree-alfa:hover,
+.system-ordemparanormal .skills-content .skill.degree-gama:hover,
+.system-ordemparanormal .skills-content .skill.degree-delta:hover {
+	background: rgba(217, 119, 6, 0.18);
+}
+.system-ordemparanormal .skills-content .skill {
+	/* botões ± dados */
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-btn {
+	border-color: rgba(139, 0, 0, 0.4) !important;
+	background: rgba(139, 0, 0, 0.08) !important;
+	color: #888888 !important;
+}
+.system-ordemparanormal .skills-content .skill .dice-mod-btn:hover {
+	background: rgba(185, 28, 28, 0.25) !important;
+	border-color: #b91c1c !important;
+	color: #ef4444 !important;
+}
+.system-ordemparanormal .skills-content .skill.condition-affected {
+	border-color: rgba(185, 42, 76, 0.45);
+}
+.system-ordemparanormal .skills-content .skill.condition-affected .skill-name,
+.system-ordemparanormal .skills-content .skill.condition-affected .skill-name.rollable,
+.system-ordemparanormal .skills-content .skill.condition-affected .resource-label {
+	color: #b92a4c !important;
 }
 .system-ordemparanormal .resource-label {
 	font-weight: bold;
 }
+.system-ordemparanormal .resource-temp {
+	font-size: var(--font-size-12);
+	font-weight: 700;
+	color: #2e7d32;
+	white-space: nowrap;
+	margin-left: 0.15rem;
+}
+.system-ordemparanormal .combat-derived-stats .resource-content {
+	gap: 0.35rem;
+	align-items: center;
+}
+.system-ordemparanormal .combat-derived-stats .derived-stat-badge {
+	font-size: var(--font-size-12);
+	font-weight: 700;
+	color: #2e7d32;
+	white-space: nowrap;
+}
+.system-ordemparanormal .active-rd-summary {
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	margin-top: 0.25rem;
+	padding: 0.25rem 0.15rem 0;
+}
+.system-ordemparanormal .active-rd-summary .active-rd-label {
+	font-size: var(--font-size-11);
+	font-weight: 700;
+	text-transform: uppercase;
+	opacity: 0.75;
+	margin-right: 0.15rem;
+}
+.system-ordemparanormal .active-rd-summary .rd-type-badge {
+	font-size: var(--font-size-11);
+	font-weight: 600;
+	padding: 0.1rem 0.4rem;
+	border-radius: 3px;
+	background: rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	white-space: nowrap;
+}
+.system-ordemparanormal .resource.condition-affected,
+.system-ordemparanormal .skill.condition-affected,
+.system-ordemparanormal .skill-box.condition-affected {
+	border-color: rgba(185, 42, 76, 0.45);
+}
+.system-ordemparanormal .resource-label.condition-affected,
+.system-ordemparanormal .skill-name.condition-affected,
+.system-ordemparanormal .skill-label.condition-affected,
+.system-ordemparanormal .badge-cat.condition-affected {
+	color: #b92a4c !important;
+}
+.system-ordemparanormal .condition-penalty {
+	display: inline-block;
+	margin-left: 0.2rem;
+	color: #b92a4c !important;
+	font-size: 0.7rem;
+	font-weight: 800;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.system-ordemparanormal .active-conditions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	margin-top: 0.4rem;
+	padding: 0.4rem 0.45rem;
+	border: 1px solid rgba(185, 42, 76, 0.35);
+	border-radius: 4px;
+	background: rgba(185, 42, 76, 0.08);
+	color: #f5f5f5;
+}
+.system-ordemparanormal .active-conditions .active-conditions-label {
+	font-size: 0.65rem;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: #ffd6dc;
+}
+.system-ordemparanormal .active-conditions .active-condition {
+	font-size: 0.75rem;
+	line-height: 1.25;
+	color: #f5f5f5;
+}
+.system-ordemparanormal .active-conditions .active-condition-name {
+	color: #ffd6dc;
+	font-weight: 800;
+}
+.system-ordemparanormal .active-conditions .active-condition-desc {
+	color: #f5f5f5;
+	opacity: 1;
+}
+.system-ordemparanormal .active-conditions .active-condition-reduced {
+	color: #ffffff;
+	font-weight: 700;
+}
 .system-ordemparanormal {
 	@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 	@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+	@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
 }
 .system-ordemparanormal .lowercase {
 	text-transform: lowercase;
@@ -1661,7 +2615,7 @@ dialog.ordemparanormal.application {
 	gap: 10px;
 }
 .system-ordemparanormal .op-item-sheet .item-header .document-name input {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 1.45rem;
 	font-weight: 800;
 	letter-spacing: -0.5px;
@@ -1698,7 +2652,7 @@ dialog.ordemparanormal.application {
 	align-items: center;
 	gap: 6px;
 	padding: 0 8px;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 11px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -1852,7 +2806,7 @@ dialog.ordemparanormal.application {
 	color: #191813;
 	font-size: 13px;
 	text-transform: uppercase;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 }
 .system-ordemparanormal .op-item-sheet .armament-grid-2 {
 	display: grid;
@@ -2094,7 +3048,7 @@ dialog.ordemparanormal.application {
 	.fullscreen-editor-header
 	h2 {
 	margin: 0;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 24px;
 	color: #222;
 	border-bottom: none;
@@ -2263,6 +3217,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal {
 	@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 	@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+	@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
 }
 .system-ordemparanormal .lowercase {
 	text-transform: lowercase;
@@ -2507,13 +3462,13 @@ dialog.ordemparanormal.application {
 }
 .system-ordemparanormal .areaTemplateWindow {
 	box-shadow: 0 0 10x #000 !important;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 }
 .system-ordemparanormal .areaTemplateWindow .window-header {
 	font-size: 13px;
 }
 .system-ordemparanormal dialog.ordemparanormal.application.roll-configuration {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	background: rgba(19, 19, 19, 0.9) 100% 80%/200% 200% url("../media/assets/ondulacoes.webp") !important;
 }
 .system-ordemparanormal dialog.ordemparanormal.application.roll-configuration .window-header,
@@ -2775,6 +3730,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal {
 	@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 	@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+	@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
 }
 .system-ordemparanormal .lowercase {
 	text-transform: lowercase;
@@ -2804,7 +3760,7 @@ dialog.ordemparanormal.application {
 	border: 1px solid #555;
 	border-radius: 4px;
 	color: #111;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 0.875rem;
 	line-height: normal;
 	text-decoration: none;
@@ -2833,7 +3789,7 @@ dialog.ordemparanormal.application {
 	border: 1px solid #b8b8b8;
 	box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
 	border-radius: 5px;
-	font-family: "Warnock Pro", "Source Sans 3", sans-serif, "Arial";
+	font-family: "Warnock Pro", "Raleway", "Source Sans 3", sans-serif, "Arial";
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-size: 14px;
@@ -2860,7 +3816,7 @@ dialog.ordemparanormal.application {
 	margin-top: 4px;
 	margin-bottom: 1px;
 	text-transform: uppercase;
-	font-family: "Optima Nova LT PRO", "Source Sans 3", sans-serif, "Arial";
+	font-family: "Optima Nova LT PRO", "Raleway", "Source Sans 3", sans-serif, "Arial";
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-weight: bold;
@@ -2881,7 +3837,7 @@ dialog.ordemparanormal.application {
 	background-color: #b8b8b8;
 }
 .system-ordemparanormal .chat-card .ritual-info {
-	font-family: "Optima Nova LT PRO", "Source Sans 3", sans-serif, "Arial";
+	font-family: "Optima Nova LT PRO", "Raleway", "Source Sans 3", sans-serif, "Arial";
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -3182,6 +4138,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal {
 	@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&Roboto:wght@400;700&display=swap");
 	@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+	@import url("https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Raleway:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap");
 }
 .system-ordemparanormal .lowercase {
 	text-transform: lowercase;
@@ -3305,7 +4262,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal .sheet-body .tab.active.inventory-tab .inventory-prestige-header .patent-box .label,
 .system-ordemparanormal .tab.inventory-tab .inventory-prestige-header .prestige-box .label,
 .system-ordemparanormal .tab.inventory-tab .inventory-prestige-header .patent-box .label {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 12px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -3379,7 +4336,7 @@ dialog.ordemparanormal.application {
 	.category-limits
 	.section-title,
 .system-ordemparanormal .tab.inventory-tab .inventory-prestige-header .category-limits .section-title {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 11px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -3419,7 +4376,7 @@ dialog.ordemparanormal.application {
 	label,
 .system-ordemparanormal .tab.inventory-tab .inventory-prestige-header .category-limits .limits-grid .limit-badge label {
 	padding: 0 6px;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-weight: 900;
 	font-size: 11px;
 	color: #444;
@@ -3491,7 +4448,7 @@ dialog.ordemparanormal.application {
 }
 .system-ordemparanormal .sheet-body .tab.active.inventory-tab .inventory-ritual-header .ritual-box .label,
 .system-ordemparanormal .tab.inventory-tab .inventory-ritual-header .ritual-box .label {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 12px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -3521,6 +4478,56 @@ dialog.ordemparanormal.application {
 	border: 1px solid rgba(0, 0, 0, 0.05);
 	color: #555;
 }
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab,
+.system-ordemparanormal .tab.inventory-tab {
+	/* Rituals tab uses dark-themed list styles elsewhere; force readable light text. */
+}
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .inventory-ritual-header .label,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .inventory-ritual-header .label {
+	color: #f5f5f5 !important;
+}
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .inventory-ritual-header .badge-ritual,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .inventory-ritual-header .badge-ritual {
+	color: #ffffff !important;
+	border-color: rgba(255, 255, 255, 0.18) !important;
+	background: rgba(255, 255, 255, 0.08) !important;
+}
+.system-ordemparanormal
+	.sheet-body
+	.tab.active.inventory-tab
+	.rituals-tab
+	.inventory-ritual-header
+	.ritual-dt-zone-bonus,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .inventory-ritual-header .ritual-dt-zone-bonus {
+	color: #c4b5fd;
+	font-weight: 700;
+	font-size: 0.95em;
+}
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .inventory-list-header,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .inventory-list-header {
+	color: #e8e8e8 !important;
+	border-color: rgba(255, 255, 255, 0.12) !important;
+}
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .item-name,
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .item-name.item-toggle,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .item-name,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .item-name.item-toggle {
+	color: #f5f5f5 !important;
+	text-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
+}
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .item-name:hover,
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .item-name.item-toggle:hover,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .item-name:hover,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .item-name.item-toggle:hover {
+	color: #ffffff !important;
+}
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .item-meta-col,
+.system-ordemparanormal .sheet-body .tab.active.inventory-tab .rituals-tab .badge-cat,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .item-meta-col,
+.system-ordemparanormal .tab.inventory-tab .rituals-tab .badge-cat {
+	color: #e8e8e8 !important;
+	border-color: rgba(255, 255, 255, 0.14) !important;
+}
 .system-ordemparanormal .sheet-body .tab.active.inventory-tab .inventory-list-header,
 .system-ordemparanormal .sheet-body .tab.active.inventory-tab .item-row-main,
 .system-ordemparanormal .tab.inventory-tab .inventory-list-header,
@@ -3534,7 +4541,7 @@ dialog.ordemparanormal.application {
 	background: rgba(0, 0, 0, 0.1);
 	color: #444;
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 10.5px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -3688,7 +4695,7 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal .sheet-body .tab.active.inventory-tab .inventory-items-list .item-row .item-identity .item-name,
 .system-ordemparanormal .tab.inventory-tab .inventory-items-list .item-row .item-identity .item-name {
 	flex: 1;
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-weight: bold;
 	font-size: 13px;
 	color: #222;
@@ -3848,7 +4855,7 @@ dialog.ordemparanormal.application {
 }
 .system-ordemparanormal .sheet-body .tab.active.inventory-tab .inventory-footer-space .space-status-bar .space-label,
 .system-ordemparanormal .tab.inventory-tab .inventory-footer-space .space-status-bar .space-label {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 10px;
 	font-weight: bold;
 	color: #555;
@@ -3858,7 +4865,7 @@ dialog.ordemparanormal.application {
 }
 .system-ordemparanormal .sheet-body .tab.active.inventory-tab .inventory-footer-space .space-status-bar .space-counter,
 .system-ordemparanormal .tab.inventory-tab .inventory-footer-space .space-status-bar .space-counter {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-weight: 800;
 	font-size: 12px;
 	display: flex;
@@ -4014,7 +5021,7 @@ dialog.ordemparanormal.application {
 	padding: 4px 15px;
 }
 .system-ordemparanormal .tactical-control-bar .toggle-btn {
-	font-family: "Source Sans 3", sans-serif;
+	font-family: "Raleway", "Source Sans 3", sans-serif;
 	font-size: 11px;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -4160,6 +5167,52 @@ dialog.ordemparanormal.application {
 	color: #666;
 	margin: 0 2px;
 }
+.system-ordemparanormal .resource-manager-box .weapon-enchantments-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+	align-items: center;
+}
+.system-ordemparanormal .resource-manager-box .weapon-enchantments-row .enchant-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+.system-ordemparanormal .resource-manager-box .weapon-enchantments-row .enchant-badge.is-active {
+	border-color: rgba(46, 125, 50, 0.45);
+}
+.system-ordemparanormal .resource-manager-box .weapon-enchantments-row .enchant-badge .enchant-toggle {
+	cursor: pointer;
+	color: inherit;
+}
+.system-ordemparanormal .resource-manager-box .weapon-enchantments-row .enchant-badge .enchant-remove {
+	cursor: pointer;
+	opacity: 0.55;
+	padding: 0 0.15rem;
+	color: inherit;
+}
+.system-ordemparanormal .resource-manager-box .weapon-enchantments-row .enchant-badge .enchant-remove:hover {
+	opacity: 1;
+	color: #c62828;
+}
+.system-ordemparanormal {
+	/* Force readable text for all inventory-like tabs on the dark sheet */
+}
+.system-ordemparanormal form.ordemparanormal.actor .inventory-tab .inventory-list-header,
+.system-ordemparanormal form.ordemparanormal.actor .inventory-tab .item-row-main,
+.system-ordemparanormal form.ordemparanormal.actor .inventory-tab .item-description {
+	color: #e8e8e8 !important;
+}
+.system-ordemparanormal form.ordemparanormal.actor .inventory-tab .item-name,
+.system-ordemparanormal form.ordemparanormal.actor .inventory-tab .item-name.item-toggle {
+	color: #f5f5f5 !important;
+	text-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
+}
+.system-ordemparanormal form.ordemparanormal.actor .inventory-tab .item-meta-col,
+.system-ordemparanormal form.ordemparanormal.actor .inventory-tab .badge-cat {
+	color: #e8e8e8 !important;
+	border-color: rgba(255, 255, 255, 0.14) !important;
+}
 .system-ordemparanormal .biography .class,
 .system-ordemparanormal .biography .trail {
 	font-size: 12px;
@@ -4220,5 +5273,3 @@ dialog.ordemparanormal.application {
 .system-ordemparanormal .dossier-section .dossier-editor-container .locked-content p:last-child {
 	margin: 0;
 }
-
-/*# sourceMappingURL=ordemparanormal.css.map */

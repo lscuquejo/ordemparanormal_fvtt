@@ -423,6 +423,18 @@ op.dropdownElement = {
 	fear: "op.elementChoices.fear",
 };
 
+/** Firearm modifications for Amaldiçoar Tecnologia */
+op.firearmModifications = {
+	certeira: { label: "op.techMod.certeira", attackBonus: 1 },
+	calibreGrosso: { label: "op.techMod.calibreGrosso", attackBonus: -2, damageBonus: "1d4" },
+	miraLaser: { label: "op.techMod.miraLaser", attackBonus: 1 },
+	canoLongo: { label: "op.techMod.canoLongo", attackBonus: 0 },
+	silenciador: { label: "op.techMod.silenciador", attackBonus: 0 },
+	tambor: { label: "op.techMod.tambor", attackBonus: 0 },
+	automatica: { label: "op.techMod.automatica", attackBonus: 0, setAutomatic: true },
+	empunhaduraAnatomica: { label: "op.techMod.empunhaduraAnatomica", attackBonus: 1 },
+};
+
 /** Threat Sheet */
 
 op.dropdownThreatType = {

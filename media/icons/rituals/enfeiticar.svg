@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+<radialGradient id="ritual-grad-enfeiticar">
+<stop offset="0%" stop-color="#d4af37" stop-opacity="1"/>
+<stop offset="100%" stop-color="#000000" stop-opacity="1"/>
+</radialGradient>
+
+</defs>
+<rect width="512" height="512" fill="url(#ritual-grad-enfeiticar)"/>
+
+<g transform="translate(0,0)" opacity="1">
+<path d="M256 140 L270 220 L350 220 L285 270 L310 350 L256 300 L202 350 L227 270 L162 220 L242 220 Z" fill="#ffd700" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round" paint-order="stroke fill"/>
+		 <circle cx="256" cy="240" r="20" fill="#ffd700" stroke="#1a1a1a" stroke-width="4" stroke-linejoin="round" paint-order="stroke fill" opacity="0.6"/>
+</g>
+</svg>

@@ -4,6 +4,7 @@ import {
 	calculatePerRound,
 	calculatePatent,
 	calculateRitualDT,
+	hasManualOverrides,
 } from "../../helpers/actor-calculations.mjs";
 
 const defaultAttrs = {
@@ -37,6 +38,11 @@ const defaultAttrs = {
 	technology: "int",
 };
 
+function nullableInt() {
+	const fields = foundry.data.fields;
+	return new fields.NumberField({ integer: true, nullable: true, initial: null });
+}
+
 function resourceField(valueInit, maxInit, extras = {}) {
 	const fields = foundry.data.fields;
 	return new fields.SchemaField({
@@ -65,6 +71,7 @@ function agentSkillField(defaultAttr = "dex") {
 			value: new fields.NumberField({ required: true, integer: true, initial: 0 }),
 		}),
 		mod: new fields.NumberField({ integer: true, initial: 0, nullable: true }),
+		diceMod: new fields.NumberField({ integer: true, initial: 0, nullable: true }),
 		conditions: new fields.SchemaField({
 			load: new fields.BooleanField({ initial: false }),
 			trained: new fields.BooleanField({ initial: false }),
@@ -77,10 +84,30 @@ export class AgentData extends foundry.abstract.TypeDataModel {
 		const fields = foundry.data.fields;
 		return {
 			disableCalculations: new fields.BooleanField({ initial: false }),
-			PV: resourceField(5, 10, { nonLethal: new foundry.data.fields.NumberField({ integer: true, initial: 0 }) }),
-			SAN: resourceField(5, 5),
-			PE: resourceField(5, 5),
-			PD: resourceField(5, 5),
+			fieldsUnlocked: new fields.BooleanField({ initial: false }),
+			overrides: new fields.SchemaField({
+				PVMax: nullableInt(),
+				SANMax: nullableInt(),
+				PEMax: nullableInt(),
+				PDMax: nullableInt(),
+				PEPerRound: nullableInt(),
+				PDPerRound: nullableInt(),
+				defense: nullableInt(),
+				dodge: nullableInt(),
+				desloc: nullableInt(),
+				patentName: new fields.StringField({ nullable: true, initial: null }),
+				itemLimit1: nullableInt(),
+				itemLimit2: nullableInt(),
+				itemLimit3: nullableInt(),
+				itemLimit4: nullableInt(),
+			}),
+			PV: resourceField(5, 10, {
+				nonLethal: new foundry.data.fields.NumberField({ integer: true, initial: 0 }),
+				temp: new foundry.data.fields.NumberField({ integer: true, initial: 0 }),
+			}),
+			SAN: resourceField(5, 5, { temp: new foundry.data.fields.NumberField({ integer: true, initial: 0 }) }),
+			PE: resourceField(5, 5, { temp: new foundry.data.fields.NumberField({ integer: true, initial: 0 }) }),
+			PD: resourceField(5, 5, { temp: new foundry.data.fields.NumberField({ integer: true, initial: 0 }) }),
 			NEX: new fields.SchemaField({
 				value: new fields.NumberField({ integer: true, min: 0, max: 99, initial: 1 }),
 			}),
@@ -108,6 +135,7 @@ export class AgentData extends foundry.abstract.TypeDataModel {
 			class: new fields.StringField({ initial: "" }),
 			origin: new fields.StringField({ initial: "" }),
 			trilha: new fields.StringField({ initial: "" }),
+			age: new fields.NumberField({ integer: true, min: 0, initial: 0 }),
 			patent: new fields.SchemaField({
 				name: new fields.StringField({ initial: "" }),
 				prestigePoints: new fields.NumberField({ integer: true, min: -999, initial: 0 }),
@@ -160,6 +188,7 @@ export class AgentData extends foundry.abstract.TypeDataModel {
 						value: new fields.NumberField({ required: true, integer: true, initial: 0 }),
 					}),
 					mod: new fields.NumberField({ integer: true, initial: 0, nullable: true }),
+					diceMod: new fields.NumberField({ integer: true, initial: 0, nullable: true }),
 					name: new fields.StringField({ initial: "" }),
 					conditions: new fields.SchemaField({
 						load: new fields.BooleanField({ initial: false }),
@@ -190,6 +219,20 @@ export class AgentData extends foundry.abstract.TypeDataModel {
 			ritual: new fields.SchemaField({
 				DT: new fields.NumberField({ integer: true, initial: 0 }),
 			}),
+			attackProfiles: new fields.ArrayField(
+				new fields.SchemaField({
+					id: new fields.StringField({ required: true }),
+					name: new fields.StringField({ initial: "" }),
+					baseArmamentId: new fields.StringField({ initial: "" }),
+					attackBonus: new fields.NumberField({ integer: true, initial: 0 }),
+					damageBonus: new fields.StringField({ initial: "" }),
+					damageFormulaOverride: new fields.StringField({ initial: "" }),
+					damageTypeOverride: new fields.StringField({ initial: "" }),
+					peCost: new fields.NumberField({ integer: true, initial: 0 }),
+					notes: new fields.StringField({ initial: "" }),
+				}),
+				{ initial: [] }
+			),
 		};
 	}
 
@@ -203,22 +246,26 @@ export class AgentData extends foundry.abstract.TypeDataModel {
 		this._isSurvivor = isSurvivor;
 		this._withoutSanity = withoutSanity;
 
-		// PD / PE per round
-		const perRound = calculatePerRound(isSurvivor, progress, withoutSanity);
-		if (perRound.PD_perRound !== undefined) this.PD.perRound = perRound.PD_perRound;
-		if (perRound.PE_perRound !== undefined) this.PE.perRound = perRound.PE_perRound;
+		const manualMode = this.disableCalculations || hasManualOverrides(this.overrides);
+		if (!manualMode) {
+			// PD / PE per round
+			const perRound = calculatePerRound(isSurvivor, progress, withoutSanity);
+			if (perRound.PD_perRound !== undefined) this.PD.perRound = perRound.PD_perRound;
+			if (perRound.PE_perRound !== undefined) this.PE.perRound = perRound.PE_perRound;
 
-		// Ritual DT
-		const PRE = this.attributes.pre.value;
-		this.ritual.DT = calculateRitualDT(isSurvivor, progress, PRE);
+			// Ritual DT
+			const PRE = this.attributes.pre.value + (Number(this.attributes.pre.bonus) || 0);
+			this.ritual.DT = calculateRitualDT(isSurvivor, progress, PRE);
+		}
 	}
 
 	prepareDerivedData() {
 		// Skills
 		this._prepareBaseSkills();
 
-		// Patent
-		Object.assign(this.patent, calculatePatent(this.patent.prestigePoints));
+		if (!this.disableCalculations && !hasManualOverrides(this.overrides)) {
+			Object.assign(this.patent, calculatePatent(this.patent.prestigePoints));
+		}
 		// Defense is calculated in OrdemActor.prepareDerivedData() after item/space
 		// mutations so that armor bonuses are included in the dodge value.
 	}

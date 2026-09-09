@@ -4,6 +4,7 @@
 import D20RollConfigurationDialog from "../applications/d20-configuration-dialog.mjs";
 import BasicRoll from "./basic-roll.mjs";
 import { areKeysPressed } from "../utils.mjs";
+import { getEffectiveAttributeValue } from "../helpers/ritual-effects.mjs";
 
 /** */
 export default class D20Roll extends BasicRoll {
@@ -202,7 +203,11 @@ export default class D20Roll extends BasicRoll {
 	configureModifiers() {
 		if (!this.validD20Roll) return;
 
-		this.d20.number = this.attribute.value;
+		this.d20.number = getEffectiveAttributeValue(this.attribute);
+
+		// Apply per-skill dice bonus/penalty (diceMod field on the skill)
+		const diceMod = this.data?.diceMod ?? 0;
+		if (diceMod !== 0) this.d20.number = Math.max(0, this.d20.number + diceMod);
 
 		if (this.options.advantageMode === undefined) {
 			const { advantage, disadvantage } = this.options;

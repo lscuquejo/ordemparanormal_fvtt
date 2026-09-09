@@ -41,6 +41,8 @@ Hooks.once("quenchReady", (quench) => {
 					_getPendingExpirations = (await import("/systems/ordemparanormal/module/hooks.mjs")).getPendingExpirations;
 				}
 				await _getPendingExpirations();
+				// One tick so Collection views settle after deleteEmbeddedDocuments.
+				await new Promise((r) => setTimeout(r, 0));
 			}
 
 			const _BATCH_STATE = { coreRollMode: null };
@@ -513,6 +515,7 @@ Hooks.once("quenchReady", (quench) => {
 					await awaitExpire();
 
 					assert.equal(combat.round, 2, "combat must be in round 2");
+					agentB = game.actors.get(agentB.id);
 					assert.isFalse(agentB.effects.has(effect.id), "effect rounds=1 must be deleted by the time we reach round 2");
 					await combat.delete();
 				});
@@ -542,6 +545,7 @@ Hooks.once("quenchReady", (quench) => {
 					await combat.nextTurn();
 					await awaitExpire();
 					assert.equal(combat.round, 2);
+					agentB = game.actors.get(agentB.id);
 					assert.isTrue(agentB.effects.has(effect.id), "still exists at round 2");
 					// Avança mais 2 → round 3
 					await combat.nextTurn();
@@ -549,6 +553,7 @@ Hooks.once("quenchReady", (quench) => {
 					await combat.nextTurn();
 					await awaitExpire();
 					assert.equal(combat.round, 3);
+					agentB = game.actors.get(agentB.id);
 					assert.isFalse(agentB.effects.has(effect.id), "expires upon reaching round 3");
 					await combat.delete();
 				});
@@ -878,6 +883,7 @@ Hooks.once("quenchReady", (quench) => {
 					// One more turn → 2 turns complete
 					await combat.nextTurn();
 					await awaitExpire();
+					agentB = game.actors.get(agentB.id);
 					assert.isFalse(
 						agentB.effects.has(effect.id),
 						`2 turns complete → must expire (without the fix, it survives due to the negative wrap)`
@@ -975,7 +981,7 @@ Hooks.once("quenchReady", (quench) => {
 					}
 				});
 
-				it("dodge-the-crit: o ataque critado vira miss (hit=false) e NAO rola dano", async () => {
+				it("dodge-the-crit: miss revelado ainda rola dano, mas sem multiplicador de critico", async () => {
 					const weapon = await porAtaqueWeapon("[combat-qol] PorAtaqueDodge");
 					const uuid = target.uuid;
 					try {
@@ -987,9 +993,10 @@ Hooks.once("quenchReady", (quench) => {
 							],
 							{ event: {} }
 						);
-						assert.equal(rolls.length, 1, "so o ataque que acertou rola dano");
+						assert.equal(rolls.length, 2, "hit e miss revelados rolam dano");
 						assert.include(rolls[0].formula, "1d6");
-						assert.notInclude(rolls[0].formula, "2d6", "crit esquivado NAO multiplica");
+						assert.include(rolls[1].formula, "1d6");
+						assert.notInclude(rolls[1].formula, "2d6", "crit esquivado NAO multiplica");
 					} finally {
 						await purgeMessages(
 							(m) =>

@@ -20,6 +20,28 @@ export class RitualData extends foundry.abstract.TypeDataModel {
 			targetQtd: new fields.StringField({ initial: "" }),
 			studentForm: new fields.BooleanField({ initial: false }),
 			trueForm: new fields.BooleanField({ initial: false }),
+			basePeCost: new fields.NumberField({ integer: true, initial: 0 }),
+			tiers: new fields.ArrayField(
+				new fields.SchemaField({
+					key: new fields.StringField({ initial: "base" }),
+					label: new fields.StringField({ initial: "" }),
+					peCost: new fields.NumberField({ integer: true, initial: 0 }),
+					formula: new fields.StringField({ initial: "" }),
+					kind: new fields.StringField({ initial: "efeito" }),
+					damageType: new fields.StringField({ initial: "" }),
+					mode: new fields.StringField({ initial: "" }),
+				}),
+				{ initial: [] }
+			),
+			rolls: new fields.ArrayField(
+				new fields.SchemaField({
+					key: new fields.StringField({ initial: "base" }),
+					label: new fields.StringField({ initial: "" }),
+					formula: new fields.StringField({ initial: "" }),
+					kind: new fields.StringField({ initial: "" }),
+				}),
+				{ initial: [] }
+			),
 		};
 	}
 

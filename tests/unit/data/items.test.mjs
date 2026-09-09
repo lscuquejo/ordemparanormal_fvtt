@@ -124,6 +124,9 @@ describe("RitualData.defineSchema()", () => {
 		expect(keys).toContain("resistance");
 		expect(keys).toContain("studentForm");
 		expect(keys).toContain("trueForm");
+		expect(keys).toContain("rolls");
+		expect(keys).toContain("tiers");
+		expect(keys).toContain("basePeCost");
 	});
 
 	it("includes skillResis and targetQtd (previously written by template but missing from schema)", () => {

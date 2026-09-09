@@ -13,6 +13,21 @@ import {
 	isMeleeAttack,
 	recomputeHit,
 } from "./reaction-helpers.mjs";
+import { applyEmbaralharOnMiss } from "./ritual-effects.mjs";
+
+/**
+ * When a miss is revealed (no pending reaction, or after dodge/skip/block),
+ * Embaralhar loses one copy (−2 Defense).
+ * @param {ChatMessage} msg
+ * @param {Actor} defender
+ * @param {object|null} hitResult
+ */
+async function maybeApplyEmbaralharMiss(msg, defender, hitResult) {
+	if (!hitResult || hitResult.hit !== false || hitResult.revealed === false) return;
+	const attackerUuid = msg.getFlag("ordemparanormal", "reactionPending")?.attackerUuid ?? hitResult.attackerUuid ?? null;
+	const attacker = attackerUuid ? await fromUuid(attackerUuid) : null;
+	await applyEmbaralharOnMiss(defender, { attacker, message: msg });
+}
 
 /**
  * Send a reaction request to the GM via socket.
@@ -192,6 +207,8 @@ async function applyDodge({ msg, defender, round }) {
 	// can still roll and apply damage.
 	await syncItemCardHitResult(msg, newHit);
 
+	await maybeApplyEmbaralharMiss(msg, defender, newHit);
+
 	const outcome = recomputed.hit ? game.i18n.localize("op.hit") : game.i18n.localize("op.miss");
 	ChatMessage.create({
 		content: game.i18n.format("op.reaction.dodgeApplied", {
@@ -219,7 +236,10 @@ async function applyBlock({ msg, defender, round }) {
 		},
 	});
 	await defender.setFlag("ordemparanormal", "reactionUsedRound", round);
-	if (revealed) await syncItemCardHitResult(msg, revealed);
+	if (revealed) {
+		await syncItemCardHitResult(msg, revealed);
+		await maybeApplyEmbaralharMiss(msg, defender, revealed);
+	}
 
 	ChatMessage.create({
 		content: game.i18n.format("op.reaction.blockApplied", {
@@ -242,6 +262,7 @@ async function _autoResolveStale({ msg, defender, round }) {
 		},
 	});
 	if (revealed) await syncItemCardHitResult(msg, revealed);
+	if (revealed) await maybeApplyEmbaralharMiss(msg, defender, revealed);
 }
 
 async function applySkip({ msg, defender, round }) {
@@ -263,6 +284,7 @@ async function applySkip({ msg, defender, round }) {
 			},
 		});
 		if (revealed) await syncItemCardHitResult(msg, revealed);
+		if (revealed) await maybeApplyEmbaralharMiss(msg, defender, revealed);
 		return;
 	}
 
